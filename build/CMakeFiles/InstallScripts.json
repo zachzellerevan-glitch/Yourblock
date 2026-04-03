@@ -1,0 +1,11 @@
+{
+	"InstallScripts" : 
+	[
+		"D:/workspace/YourBlock/build/cmake_install.cmake",
+		"D:/workspace/YourBlock/build/libs/glfw/cmake_install.cmake",
+		"D:/workspace/YourBlock/build/libs/glfw/src/cmake_install.cmake",
+		"D:/workspace/YourBlock/build/libs/glfw/docs/cmake_install.cmake",
+		"D:/workspace/YourBlock/build/libs/glm/cmake_install.cmake"
+	],
+	"Parallel" : false
+}

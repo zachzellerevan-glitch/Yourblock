@@ -9,7 +9,7 @@ add_subdirectory(libs/glm)
 
 add_library(glad STATIC libs/glad/src/glad.c)
 
-target_link_directories(glad PUBLIC libs/glad/include)
+target_include_directories(glad PUBLIC libs/glad/include)
 
 set(IMGUI_SOURCES
     libs/Imgui/imgui.cpp
@@ -20,18 +20,20 @@ set(IMGUI_SOURCES
     libs/Imgui/backends/imgui_impl_opengl3.cpp
 )
 add_library(imgui STATIC ${IMGUI_SOURCES})
-target_link_directories(imgui PUBLIC 
+target_include_directories(imgui PUBLIC 
     libs/Imgui
     libs/Imgui/backends
 )
+target_link_libraries(imgui PRIVATE glfw OpenGL::GL glad)
+target_compile_definitions(imgui PRIVATE GLFW_INCLUDE_NONE)
 
 add_executable(YourBlock src/main.cpp)
 
+find_package(OpenGL REQUIRED)
 target_include_directories(YourBlock PRIVATE src/)
-target_link_libraries(YourBlock PRIVATE glfw glad glm imgui)
+target_link_libraries(YourBlock PRIVATE glfw glad glm imgui OpenGL::GL)
 target_compile_definitions(YourBlock PRIVATE GLFW_INCLUDE_NONE)
 
-find_package(OpenGL REQUIRED)
-target_link_directories(YourBlock PRIVATE OpenGL::GL)
+
 
 #file(COPY assets/ DESTINATION ${CMAKE_BINARY_DIR}/assets)

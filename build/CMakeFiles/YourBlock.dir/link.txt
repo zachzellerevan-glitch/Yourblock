@@ -1,0 +1,3 @@
+"C:\Program Files\CMake\bin\cmake.exe" -E rm -f CMakeFiles\YourBlock.dir/objects.a
+D:\mingw64\bin\ar.exe qc CMakeFiles\YourBlock.dir/objects.a @CMakeFiles\YourBlock.dir\objects1.rsp
+D:\mingw64\bin\g++.exe -g -Wl,--whole-archive CMakeFiles\YourBlock.dir/objects.a -Wl,--no-whole-archive -o YourBlock.exe -Wl,--out-implib,libYourBlock.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\YourBlock.dir\linkLibs.rsp
