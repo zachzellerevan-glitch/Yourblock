@@ -18,6 +18,7 @@ namespace Engine{
 
     class WindowClosedEvent : public Event{
         public:
-        
+            WindowClosedEvent(){}
+            EVENT_CLASS_TYPE(WindowClose);
     };
 }

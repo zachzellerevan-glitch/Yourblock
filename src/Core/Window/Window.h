@@ -24,7 +24,7 @@ namespace Engine{
             explicit Window(const WindowProps & props = WindowProps());
             ~Window();
             
-            //prohibit copy,move
+            //prohibit copy,move(Singleton?)
             Window(const Window&) = delete;
             Window& operator=(const Window&) = delete;
             Window(Window&& other) noexcept;
@@ -44,6 +44,7 @@ namespace Engine{
             void SetVsync(bool flag);
 
             void HideCursor(bool flag);
+            static std::unique_ptr<Window> Create(const WindowProps & prop = WindowProps());
 
             inline GLFWwindow * GetWindowHandle() const{return m_Window;}
         private:

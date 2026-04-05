@@ -5,6 +5,9 @@
 
 namespace Engine{
     Window::Window(const WindowProps & props) : m_Data(props)  {
+        //only for debug
+        SetEventCallback([](Event & e){});
+
         static bool glfwInitialized = false;
         if(!glfwInitialized){
             glfwInit();
@@ -36,7 +39,7 @@ namespace Engine{
             switch(action){
                 case GLFW_PRESS:{
                     KeyPressedEvent event(key,0);
-                    SelfWindow->m_EventCallback(event);
+                    SelfWindow->m_EventCallback(event); // call eventcallbackfn not store
                     break;
                 }
                 case GLFW_RELEASE:{
@@ -90,6 +93,12 @@ namespace Engine{
             KeyTypedEvent event(codepoint);
             SelfWindow->m_EventCallback(event);
         });
+
+        glfwSetWindowCloseCallback(m_Window,[](GLFWwindow * window){
+            Window * SelfWindow = static_cast<Window*>(glfwGetWindowUserPointer(window));
+            WindowClosedEvent event;
+            SelfWindow->m_EventCallback(event);
+        });
     }
 
     Window::~Window(){
@@ -129,5 +138,9 @@ namespace Engine{
             glfwSetInputMode(m_Window,GLFW_CURSOR,GLFW_CURSOR_DISABLED);
         else 
             glfwSetInputMode(m_Window,GLFW_CURSOR,GLFW_CURSOR_NORMAL);
+    }
+
+    std::unique_ptr<Window> Window::Create(const WindowProps & prop){
+        return std::make_unique<Window>(prop);
     }
 }

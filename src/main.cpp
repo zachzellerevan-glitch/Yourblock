@@ -1,8 +1,9 @@
-#include "YBpch.h"
 #include "Core/Core.h"
 
+
+
 int main(){
-    //Engine::Window window;
-    //getchar();
+    auto & app = Engine::Application::GetApp();
+    app.Run();
     return 0;
 }
