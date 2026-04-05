@@ -27,13 +27,15 @@ target_include_directories(imgui PUBLIC
 target_link_libraries(imgui PRIVATE glfw OpenGL::GL glad)
 target_compile_definitions(imgui PRIVATE GLFW_INCLUDE_NONE)
 
-add_executable(YourBlock src/main.cpp)
+
+file(GLOB_RECURSE SOURCES "src/*.cpp")
+add_executable(YourBlock ${SOURCES})
+
 
 find_package(OpenGL REQUIRED)
 target_include_directories(YourBlock PRIVATE src/)
 target_link_libraries(YourBlock PRIVATE glfw glad glm imgui OpenGL::GL)
 target_compile_definitions(YourBlock PRIVATE GLFW_INCLUDE_NONE)
-
 
 
 #file(COPY assets/ DESTINATION ${CMAKE_BINARY_DIR}/assets)
