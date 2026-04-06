@@ -1,6 +1,7 @@
 #include "YBpch.h"
 #include "App.h"
 #include "Core/Input/Input.h"
+#include "Game/GameLayer.h"
 #include <GLFW/glfw3.h>
 
 #define BIND_EVENT_FN(x) std::bind(&x,this,std::placeholders::_1)
@@ -18,6 +19,7 @@ namespace Engine{
         m_Window = Window::Create();
         m_Window->SetEventCallback(BIND_EVENT_FN(Application::OnEvent));
         PushLayer(new ExampleLayer);
+        PushLayer(new GameLayer);
     }
 
     Application::~Application(){
@@ -26,8 +28,8 @@ namespace Engine{
 
     void Application::Run(){
         while(m_Running){
-            glClearColor(0.5f,0.0f,1.0f,1.0f);
-            glClear(GL_COLOR_BUFFER_BIT |  GL_DEPTH_BUFFER_BIT);
+            //glClearColor(0.5f,0.0f,1.0f,1.0f);
+            //glClear(GL_COLOR_BUFFER_BIT |  GL_DEPTH_BUFFER_BIT);
             m_Window->OnUpdate();
             m_LayerStack.OnUpdate();
         }

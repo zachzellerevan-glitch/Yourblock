@@ -23,6 +23,11 @@ namespace Engine{
         if(!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)){
             std::cout<<"Error:glad initialized fail"<<std::endl;
         }
+        int width, height;
+        glfwGetFramebufferSize(m_Window, &width, &height);
+        glViewport(0, 0, width, height);
+
+     
 
         SetVsync(true);
 

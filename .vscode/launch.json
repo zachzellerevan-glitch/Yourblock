@@ -8,7 +8,7 @@
             "name" : "C/C++ build active file",
             "type" : "cppdbg",
             "request": "launch",
-            "cwd" : "d:\\mingw64\\bin",
+            "cwd" : "${workspaceFolder}",
             "program" : "${workspaceFolder}\\build\\YourBlock.exe",
             "externalConsole": true,
         }

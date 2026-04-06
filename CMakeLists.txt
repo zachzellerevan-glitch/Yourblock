@@ -30,6 +30,8 @@ target_compile_definitions(imgui PRIVATE GLFW_INCLUDE_NONE)
 
 file(GLOB_RECURSE SOURCES "src/*.cpp")
 add_executable(YourBlock ${SOURCES})
+# 将 assets 文件夹复制到可执行文件所在的构建目录
+file(COPY assets/ DESTINATION ${CMAKE_BINARY_DIR}/assets)
 
 
 find_package(OpenGL REQUIRED)
