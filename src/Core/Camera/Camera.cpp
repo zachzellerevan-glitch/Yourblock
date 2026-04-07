@@ -37,12 +37,28 @@ namespace Engine{
 
     void Camera::CameraMove(MoveDirection movement,float dt){
         switch (movement){
-        case MoveDirection::FORWARD:
-            m_Position += m_Front * m_CameraSpeed * dt;
+        case MoveDirection::FORWARD:{
+            glm::vec3 horizontalFront = glm::vec3(m_Front.x, 0.0f, m_Front.z);
+            // 防止俯仰角接近 ±90° 时方向退化为零向量
+            if (glm::length(horizontalFront) > 0.001f) {
+                horizontalFront = glm::normalize(horizontalFront);
+            } else {
+                horizontalFront = glm::vec3(0.0f, 0.0f, 1.0f); // 备用方向
+            }
+            m_Position += horizontalFront * m_CameraSpeed * dt;
             break;
-        case MoveDirection::BACKWARD:
-            m_Position -= m_Front * m_CameraSpeed * dt;
+        }
+        case MoveDirection::BACKWARD:{
+            glm::vec3 horizontalFront = glm::vec3(m_Front.x, 0.0f, m_Front.z);
+            
+            if (glm::length(horizontalFront) > 0.001f) {
+                horizontalFront = glm::normalize(horizontalFront);
+            } else {
+                horizontalFront = glm::vec3(0.0f, 0.0f, 1.0f); 
+            }
+            m_Position -= horizontalFront * m_CameraSpeed * dt;
             break;
+        }
         case MoveDirection::LEFT:
             m_Position -= m_Right * m_CameraSpeed * dt;
             break;
@@ -50,8 +66,12 @@ namespace Engine{
             m_Position += m_Right * m_CameraSpeed * dt;
             break;
         case MoveDirection::UP:
+            if(m_EnableFly)
+                m_Position += m_Up * m_CameraSpeed * dt;
             break;
         case MoveDirection::DOWN:
+            if(m_EnableFly)
+                m_Position -= m_Up * m_CameraSpeed * dt;
             break;
         default:
             break;

@@ -15,6 +15,6 @@ namespace Engine{
             std::unique_ptr<Shader> m_Shader;
             std::unique_ptr<Camera> m_Camera;
             bool m_FirstFrame = true;
-            unsigned int m_VAO,m_VBO;
+            unsigned int m_VAO,m_VBO,m_EBO;
     };
 }

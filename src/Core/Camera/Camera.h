@@ -31,7 +31,7 @@ namespace Engine{
             float m_Yaw,m_Pitch;
             float m_Fov,m_AspectRatio,m_NearPlane,m_FarPlane;
             float m_CameraSpeed = 1.0f,m_Sensitive = 0.2f;
-            bool m_EnableFly = false;
+            bool m_EnableFly = true;
             glm::vec3 m_WorldUp = glm::vec3(0.0f,1.0f,0.0f);
             glm::vec3 m_Up,m_Right,m_Front;
             glm::vec3 m_Position;
