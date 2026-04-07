@@ -74,4 +74,32 @@ namespace Engine{
     void Shader::Use()const {
         glUseProgram(m_RenderID);
     }
+
+    void Shader::SetUniform(const std::string & name,int value){
+        int UniformLocation = glGetUniformLocation(m_RenderID,name.c_str());
+        if(UniformLocation == -1){
+            printf("Shader::SetUniform::unknow uniform name.\n");
+            return;
+        }
+        glUniform1i(UniformLocation,value);
+    }
+
+    void Shader::SetUniform(const std::string & name,float value){
+        int UniformLocation = glGetUniformLocation(m_RenderID,name.c_str());
+        if(UniformLocation == -1){
+            printf("Shader::SetUniform::unknow uniform name.\n");
+            return;
+        }
+        glUniform1f(UniformLocation,value);
+    }
+
+    void Shader::SetUniform(const std::string &name, const glm::mat4 &value)
+    {
+        int UniformLocation = glGetUniformLocation(m_RenderID,name.c_str());
+        if(UniformLocation == -1){
+            printf("Shader::SetUniform::unknow uniform name.\n");
+            return;
+        }
+        glUniformMatrix4fv(UniformLocation,1,GL_FALSE,glm::value_ptr(value));
+    }
 }

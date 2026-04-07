@@ -21,4 +21,18 @@ namespace Engine{
             WindowClosedEvent(){}
             EVENT_CLASS_TYPE(WindowClose);
     };
+
+    class WindowFocusEvent : public Event{
+        public:
+            WindowFocusEvent(bool IsFocused) : m_IsFocused(IsFocused){}
+            inline bool IsFocused(){return m_IsFocused;}
+            std::string ToString() const override{
+                std::stringstream ss;
+                ss<<"WindowFocusEvent:"<<m_IsFocused;
+                return ss.str();
+            }
+            EVENT_CLASS_TYPE(WindowFocus);
+        private:
+            bool m_IsFocused;
+    };
 }

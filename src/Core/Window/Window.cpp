@@ -104,6 +104,12 @@ namespace Engine{
             WindowClosedEvent event;
             SelfWindow->m_EventCallback(event);
         });
+
+        glfwSetWindowFocusCallback(m_Window,[](GLFWwindow* window, int focused){
+            Window * SelfWindow = static_cast<Window*>(glfwGetWindowUserPointer(window));
+            WindowFocusEvent event(focused != 0);
+            SelfWindow->m_EventCallback(event);
+        });
     }
 
     Window::~Window(){

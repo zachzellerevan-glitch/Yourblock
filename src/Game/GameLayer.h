@@ -9,10 +9,12 @@ namespace Engine{
         public:
             virtual void OnAttach() override;
             virtual void OnDetach() override;
-            virtual void OnUpdate() override;
-            virtual void OnEvent(Event & event) override{}  
+            virtual void OnUpdate(float dt) override;
+            virtual void OnEvent(Event & event) override;
         private:
             std::unique_ptr<Shader> m_Shader;
+            std::unique_ptr<Camera> m_Camera;
+            bool m_FirstFrame = true;
             unsigned int m_VAO,m_VBO;
     };
 }

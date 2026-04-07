@@ -4,6 +4,8 @@
 #include "Core/Event/EventHeader.h"
 #include "Core/Layer/LayerStack.h"
 #include "Core/Layer/Layer.h"
+#include "Core/Timer/Timer.h"
+#include "Core/Input/Input.h"
 #include "YBpch.h"
 
 namespace Engine{

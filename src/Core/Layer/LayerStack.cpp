@@ -30,8 +30,9 @@ namespace Engine{
     }
 
     void LayerStack::OnUpdate(){
+        float dt = Timer::Get().GetDeltaTime();
         for(Layer * layer : m_LayerStack){
-            layer->OnUpdate();
+            layer->OnUpdate(dt);
         }
     }
 

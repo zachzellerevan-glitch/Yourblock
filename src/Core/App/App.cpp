@@ -1,6 +1,5 @@
 #include "YBpch.h"
 #include "App.h"
-#include "Core/Input/Input.h"
 #include "Game/GameLayer.h"
 #include <GLFW/glfw3.h>
 
@@ -9,17 +8,17 @@
 namespace Engine{
     class ExampleLayer : public Layer{
         public:
-            virtual void OnUpdate() override{
+            virtual void OnUpdate(float dt) override{
                 if(Input::IsKeyPressed(GLFW_KEY_W))
-                    printf("W pressed.\n");
+                    printf("ExampleLayer::W pressed.\n");
             }
     };
     
     Application::Application(){
         m_Window = Window::Create();
         m_Window->SetEventCallback(BIND_EVENT_FN(Application::OnEvent));
-        PushLayer(new ExampleLayer);
         PushLayer(new GameLayer);
+        PushLayer(new ExampleLayer);
     }
 
     Application::~Application(){
@@ -28,6 +27,7 @@ namespace Engine{
 
     void Application::Run(){
         while(m_Running){
+            Timer::Get().Update();
             //glClearColor(0.5f,0.0f,1.0f,1.0f);
             //glClear(GL_COLOR_BUFFER_BIT |  GL_DEPTH_BUFFER_BIT);
             m_Window->OnUpdate();

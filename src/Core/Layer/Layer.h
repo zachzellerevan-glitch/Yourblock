@@ -2,6 +2,7 @@
 
 #include "YBpch.h"
 #include "Core/Event/Event.h"
+#include "Core/Timer/Timer.h"
 
 namespace Engine{
     class Layer{
@@ -11,7 +12,7 @@ namespace Engine{
             
             virtual void OnAttach(){}
             virtual void OnDetach(){}
-            virtual void OnUpdate(){}
+            virtual void OnUpdate(float dt){}
             virtual void OnEvent(Event & event){}
     };
 }
