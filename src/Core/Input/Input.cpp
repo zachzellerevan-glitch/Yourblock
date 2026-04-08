@@ -10,6 +10,14 @@ namespace Engine{
 
     }
 
+    void Input::SetWindowFocus(bool flag){
+        Get().m_WindowFocus = flag;
+        if(flag){
+            ResetMouseDelta();
+        }
+    }
+
+
     void Input::ResetMouseDelta(){
         m_FirstMouse = true;
         auto [x, y] = GetMousePos(); 
@@ -38,6 +46,9 @@ namespace Engine{
     }
     
     std::pair<float, float> Input::GetDeltaMousePosImpl(){
+        if(!m_WindowFocus){
+            return {0.0f,0.0f};
+        }
         auto [x,y] = GetMousePos();
         if(m_FirstMouse){
             m_LastX = x;

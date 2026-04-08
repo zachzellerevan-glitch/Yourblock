@@ -15,15 +15,19 @@ namespace Engine{
             inline static float GetMouseX(){return Get().GetMousePos().first;}
             inline static float GetMouseY(){return Get().GetMousePos().second;}
             inline static std::pair<float,float> GetDeltaMousePos(){return Get().GetDeltaMousePosImpl();}
+            inline static bool IsWindowFocus(){return Get().GetWindowFocus();}
+            void SetWindowFocus(bool flag);
             void ResetMouseDelta();
         protected:
             bool IsKeyPressedImpl(int keycode);
             bool IsMouseButtonPressedImpl(int button);
+            inline bool GetWindowFocus(){return m_WindowFocus;}
             std::pair<float,float> GetMousePos();
             std::pair<float,float> GetDeltaMousePosImpl();
         private:
             float m_LastX = 0.0f, m_LastY = 0.0f;
             bool m_FirstMouse = true;
+            bool m_WindowFocus = true;
             Input();
             ~Input();
     };

@@ -137,9 +137,11 @@ namespace Engine{
         dispatcher.Dispatch<WindowFocusEvent>([this](WindowFocusEvent & event){
             if(event.IsFocused()){
                 glfwSetInputMode(Application::GetApp().GetWindow().GetWindowHandle(),GLFW_CURSOR,GLFW_CURSOR_DISABLED);
+                Input::Get().SetWindowFocus(true);
                 Input::Get().ResetMouseDelta();
             }else{
                 glfwSetInputMode(Application::GetApp().GetWindow().GetWindowHandle(),GLFW_CURSOR,GLFW_CURSOR_NORMAL);
+                Input::Get().SetWindowFocus(false);
             }
             return false; //m_Handle
         });

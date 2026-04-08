@@ -6,8 +6,16 @@
 namespace Engine{
     class WindowResizeEvent : public Event{
         public:
-        
+            WindowResizeEvent(int width,int height) : m_Width(width),m_Height(height) {}
+            inline std::pair<unsigned int,unsigned int> GetWindowSize(){return {m_Width,m_Height};}
+            std::string ToString() const override{
+                std::stringstream ss;
+                ss<<"WindowResizeEvent:"<<m_Width<<","<<m_Height;
+                return ss.str();
+            }
+            EVENT_CLASS_TYPE(WindowResize);
         private:
+            unsigned int m_Width,m_Height;
 
     };
 
