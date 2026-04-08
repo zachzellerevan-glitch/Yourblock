@@ -65,14 +65,24 @@ namespace Engine{
         case MoveDirection::RIGHT:
             m_Position += m_Right * m_CameraSpeed * dt;
             break;
-        case MoveDirection::UP:
+        case MoveDirection::UP:{
+            glm::vec3 horizontalUp = glm::vec3(0.0f,m_Up.y,0.0f);
+            if (glm::length(horizontalUp) > 0.001f) {
+                horizontalUp = glm::normalize(horizontalUp);
+            }
             if(m_EnableFly)
-                m_Position += m_Up * m_CameraSpeed * dt;
+                m_Position += horizontalUp * m_CameraSpeed * dt;
             break;
-        case MoveDirection::DOWN:
+        }
+        case MoveDirection::DOWN:{
+            glm::vec3 horizontalUp = glm::vec3(0.0f,m_Up.y,0.0f);
+            if (glm::length(horizontalUp) > 0.001f) {
+                horizontalUp = glm::normalize(horizontalUp);
+            }
             if(m_EnableFly)
-                m_Position -= m_Up * m_CameraSpeed * dt;
+                m_Position -= horizontalUp * m_CameraSpeed * dt;
             break;
+        }
         default:
             break;
         }

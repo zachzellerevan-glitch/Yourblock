@@ -2,6 +2,7 @@
 
 #include "Core/Core.h"
 #include "Render/Shader.h"
+#include "Render/Texture.h"
 #include "YBpch.h"
 
 namespace Engine{
@@ -14,6 +15,7 @@ namespace Engine{
         private:
             std::unique_ptr<Shader> m_Shader;
             std::unique_ptr<Camera> m_Camera;
+            std::unique_ptr<Texture> m_Texture;
             bool m_FirstFrame = true;
             unsigned int m_VAO,m_VBO,m_EBO;
     };
