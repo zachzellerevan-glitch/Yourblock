@@ -1,0 +1,31 @@
+{
+    "texture_atlas":"assets/Texture/AllTexture.png",
+    "tile_size":16,
+    "block":{
+        "AIR":{
+            "Solid":false,
+            "Transparent":true,
+            "TextureAll":0
+        },
+        "GRASS":{
+            "Solid":true,
+            "Transparent":false,
+            "TextureTop":1,
+            "TextureSide":2,
+            "TextureBottom":3,
+            "Hardness":1
+        },
+        "DIRT":{
+            "Solid":true,
+            "Transparent":false,
+            "TextureAll":3,
+            "Hardness":1
+        },
+        "STONE":{
+            "Solid":true,
+            "Transparent":false,
+            "TextureAll":4,
+            "Hardness":2
+        }
+    }
+}

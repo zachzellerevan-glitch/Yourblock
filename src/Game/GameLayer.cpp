@@ -5,23 +5,6 @@
 namespace Engine{
     void GameLayer::OnAttach(){
         std::cout << "GameLayer::OpenGL Version: " << glGetString(GL_VERSION) << std::endl;
-        float Vertices[] = {
-            0.5f, 0.5f, 0.0f,   // 右上角
-            0.5f, -0.5f, 0.0f,  // 右下角
-            -0.5f, -0.5f, 0.0f, // 左下角
-        };
-
-        float vertices1[] = {
-            // 位置              // 颜色
-            -0.5f, -0.5f, -0.5f,  1.0f, 0.0f, 0.0f, // 0 红色
-            0.5f, -0.5f, -0.5f,  0.0f, 1.0f, 0.0f, // 1 绿色
-            0.5f, -0.5f,  0.5f,  0.0f, 0.0f, 1.0f, // 2 蓝色
-            -0.5f, -0.5f,  0.5f,  1.0f, 1.0f, 0.0f, // 3 黄色
-            -0.5f,  0.5f, -0.5f,  1.0f, 0.0f, 1.0f, // 4 品红
-            0.5f,  0.5f, -0.5f,  0.0f, 1.0f, 1.0f, // 5 青色
-            0.5f,  0.5f,  0.5f,  1.0f, 1.0f, 1.0f, // 6 白色
-            -0.5f,  0.5f,  0.5f,  0.5f, 0.5f, 0.5f  // 7 灰色
-        };
         
         float vertices[] = {
             // 前面 (z = 0.5f)
