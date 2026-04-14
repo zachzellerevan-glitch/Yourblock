@@ -110,6 +110,13 @@ namespace Engine{
             WindowFocusEvent event(focused != 0);
             SelfWindow->m_EventCallback(event);
         });
+
+        glfwSetWindowSizeCallback(m_Window,[](GLFWwindow * window,int width,int height){
+            Window * SelfWindow = static_cast<Window*>(glfwGetWindowUserPointer(window));
+            WindowResizeEvent event(width,height);
+            glViewport(0, 0, width, height);
+            SelfWindow->m_EventCallback(event);
+        });
     }
 
     Window::~Window(){

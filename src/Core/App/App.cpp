@@ -38,6 +38,7 @@ namespace Engine{
     void Application::OnEvent(Event & event){
         EventDispatcher dispathcer(event);
         dispathcer.Dispatch<WindowClosedEvent>(BIND_EVENT_FN(Application::OnWindowClose));
+
         m_LayerStack.OnEvent(event);
     }
 
@@ -46,6 +47,8 @@ namespace Engine{
         m_Running = false;
         return true;
     }
+
+    
 
     void Application::PushLayer(Layer * layer){
         m_LayerStack.PushLayer(layer);

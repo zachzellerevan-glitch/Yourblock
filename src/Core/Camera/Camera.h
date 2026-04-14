@@ -19,6 +19,7 @@ namespace Engine{
             Camera(float Pov,float AspectRatio,float NearPlane,float FarPlane);
             void SetPosition(const glm::vec3 & position);
             void SetRotation(float Yaw,float Pitch);
+            void SetAspectRatio(float AspectRatio);
             void EnableFly(bool flag);
             inline glm::mat4 GetViewMartix() const {return m_ViewMartix;}
             inline glm::mat4 GetProjectionMartix() const {return m_ProjectionMartix;}

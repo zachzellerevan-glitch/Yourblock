@@ -1,7 +1,7 @@
 #pragma once
 
 #include "YBpch.h"
-#include "TextureArray.h"
+#include "Render/TextureArray.h"
 #include <glm/glm.hpp>
 
 namespace Engine{ 

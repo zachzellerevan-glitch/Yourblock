@@ -12,8 +12,8 @@ namespace Engine{
             void SetEventCallback(const EventCallbackFn& callback){m_EventCallback = callback;}
             struct WindowProps{
                 std::string Title = "YourBlock";
-                unsigned int Width = 1280;
-                unsigned int Height = 720;
+                unsigned int Width = 1920;
+                unsigned int Height = 1080;
                 bool Resizable = true;
                 bool Vsync = true;
 

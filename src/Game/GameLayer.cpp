@@ -16,7 +16,7 @@ namespace Engine{
 
         m_Shader = std::make_unique<Shader>("assets/Shader/Vertex.vs","assets/Shader/Fragment.fs");
 
-        m_Camera = std::make_unique<Camera>(90.0f,1280/720,0.1f,100.0f);
+        m_Camera = std::make_unique<Camera>(90.0f,1920/1080,0.1f,100.0f);
         m_Camera->SetPosition(glm::vec3(8.0f,30.0f,8.0f));
         m_Camera->SetRotation(-90.0f,-30.0f);
         glEnable(GL_DEPTH_TEST);
@@ -92,6 +92,29 @@ namespace Engine{
                 Input::Get().SetWindowFocus(false);
             }
             return false; //m_Handle
+        });
+
+        dispatcher.Dispatch<KeyPressedEvent>([this](KeyPressedEvent & event){
+            if(event.GetKeyCode() == GLFW_KEY_ESCAPE){
+                if(!m_ESC){
+                    glfwSetInputMode(Application::GetApp().GetWindow().GetWindowHandle(),GLFW_CURSOR,GLFW_CURSOR_NORMAL);
+                    Input::Get().SetWindowFocus(false);
+                    m_ESC = true;
+                }else{
+                    glfwSetInputMode(Application::GetApp().GetWindow().GetWindowHandle(),GLFW_CURSOR,GLFW_CURSOR_DISABLED);
+                    Input::Get().SetWindowFocus(true);
+                    Input::Get().ResetMouseDelta();
+                    m_ESC = false;
+                }
+            }
+            return false;
+        });
+
+        dispatcher.Dispatch<WindowResizeEvent>([this](WindowResizeEvent & event){
+            auto [width,height] = event.GetWindowSize();
+            float aspect = (float)width / (float)height;
+            m_Camera->SetAspectRatio(aspect);
+            return false;
         });
     }
 }

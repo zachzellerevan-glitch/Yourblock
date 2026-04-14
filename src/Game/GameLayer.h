@@ -3,7 +3,7 @@
 #include "Core/Core.h"
 #include "Render/Shader.h"
 #include "Render/Texture.h"
-#include "World/TextureArray.h"
+#include "Render/TextureArray.h"
 #include "World/ChunkMesher.h"
 #include "World/Chunk.h"
 #include "YBpch.h"
@@ -22,5 +22,6 @@ namespace Engine{
             std::unique_ptr<Chunk> m_Chunk;
             bool m_FirstFrame = true;
             unsigned int m_VAO,m_VBO,m_EBO;
+            bool m_ESC = false;
     };
 }

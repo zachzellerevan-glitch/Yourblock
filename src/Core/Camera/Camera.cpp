@@ -31,6 +31,11 @@ namespace Engine{
         UpdateView();
     }
 
+    void Camera::SetAspectRatio(float AspectRatio){
+        m_AspectRatio = AspectRatio;
+        m_ProjectionMartix = glm::perspective(glm::radians(m_Fov),m_AspectRatio,m_NearPlane,m_FarPlane);
+    }
+
     void Camera::EnableFly(bool flag){
         m_EnableFly = flag;
     }
