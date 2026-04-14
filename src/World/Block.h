@@ -1,6 +1,7 @@
 #pragma once
 
 #include "YBpch.h"
+#include "TextureArray.h"
 #include <glm/glm.hpp>
 
 namespace Engine{ 
@@ -13,9 +14,9 @@ namespace Engine{
         bool IsSolid;
         bool IsTransparent;
         float Hardness;
-        glm::vec4 TextureTop;
-        glm::vec4 TextureBottom;
-        glm::vec4 TextureSide;
+        int TextureTop;
+        int TextureSide;
+        int TextureBottom;
         bool IsLight;
     };
 

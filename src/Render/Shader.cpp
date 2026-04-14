@@ -49,6 +49,7 @@ namespace Engine{
         if(!CheckCreate){
             glGetProgramInfoLog(Program,512,NULL,InfoLog);
             std::string Infolog = InfoLog;
+            std::cerr<<"Failed to link program:"<<InfoLog<<std::endl;
             throw std::runtime_error("Failed to link program:" + Infolog);
         }
 

@@ -3,6 +3,9 @@
 #include "Core/Core.h"
 #include "Render/Shader.h"
 #include "Render/Texture.h"
+#include "World/TextureArray.h"
+#include "World/ChunkMesher.h"
+#include "World/Chunk.h"
 #include "YBpch.h"
 
 namespace Engine{
@@ -16,6 +19,7 @@ namespace Engine{
             std::unique_ptr<Shader> m_Shader;
             std::unique_ptr<Camera> m_Camera;
             std::unique_ptr<Texture> m_Texture;
+            std::unique_ptr<Chunk> m_Chunk;
             bool m_FirstFrame = true;
             unsigned int m_VAO,m_VBO,m_EBO;
     };

@@ -1,8 +1,15 @@
 #include "Chunk.h"
+#include "ChunkMesher.h"
+#include "ChunkMesh.h"
+#include "Render/Shader.h"
 
 namespace Engine{
     Chunk::Chunk(int chunkx, int chunkz) : m_ChunkX(chunkx),m_ChunkZ(chunkz){
         m_Blocks.fill(static_cast<uint16_t>(BlockType::AIR));
+    }
+
+    Chunk::~Chunk()
+    {
     }
 
     void Chunk::SetBlock(int x, int y, int z, BlockType block){
@@ -16,7 +23,7 @@ namespace Engine{
                     BlockType type;
                     if (y > 19 && y < 21) {         
                         type = BlockType::GRASS;
-                    } else if (y > 15 && y < 19) {  
+                    } else if (y > 15 && y <= 19) {  
                         type = BlockType::DIRT;
                     } else if (y <= 15) {            
                         type = BlockType::STONE;
@@ -27,10 +34,26 @@ namespace Engine{
                 }
             }
         }
+        SetBlock(1,25,1,BlockType::GRASS);
     }
 
     BlockType Chunk::GetBlockType(int x, int y, int z) const{
         return static_cast<BlockType>(m_Blocks[GetIndex(x,y,z)]);
+    }
+
+    void Chunk::RebuildMesh(){
+        std::vector<Vertex> vertices;
+        std::vector<uint32_t> indices;
+        ChunkMesher::GenerateMesh(*this, vertices, indices);
+        if (!m_Mesh) m_Mesh = std::make_unique<ChunkMesh>();
+        m_Mesh->Upload(vertices, indices);
+        m_IsMeshDirty = false;
+    }
+
+    void Chunk::Render(Shader &shader){
+        if(m_Mesh && m_Mesh->IsValid()){
+            m_Mesh->Draw();
+        }
     }
 
     /*

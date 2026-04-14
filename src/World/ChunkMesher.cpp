@@ -1,4 +1,5 @@
 #include "ChunkMesher.h"
+#include "Chunk.h"
 
 namespace Engine{
     void ChunkMesher::GenerateMesh(const Chunk &chunk, std::vector<Vertex> &Verticies, std::vector<uint32_t> &Indicies) {
@@ -72,10 +73,9 @@ namespace Engine{
         return false;
     }
 
-    void ChunkMesher::AddFace(std::vector<Vertex> &Vertices, std::vector<uint32_t> &Indicies, int x, int y, int z, Face face,const glm::vec4 &uvRect){
+    void ChunkMesher::AddFace(std::vector<Vertex> &Vertices, std::vector<uint32_t> &Indicies, int x, int y, int z, Face face,int Layer){
         uint32_t start = static_cast<uint32_t>(Vertices.size());
-        float uMin = uvRect.x, vMin = uvRect.y;
-        float uMax = uvRect.z, vMax = uvRect.w;
+        const float uMin = 0.0f,uMax = 1.0f,vMin = 0.0f,vMax = 1.0f;
 
         glm::vec3 v0,v1,v2,v3;
         
@@ -118,10 +118,10 @@ namespace Engine{
             break;
         }
 
-        Vertices.push_back({v0,{uMin,vMin}});
-        Vertices.push_back({v1,{uMax,vMin}});
-        Vertices.push_back({v2,{uMax,vMax}});
-        Vertices.push_back({v3,{uMin,vMax}});
+        Vertices.push_back({v0,{uMin,vMin},Layer});
+        Vertices.push_back({v1,{uMax,vMin},Layer});
+        Vertices.push_back({v2,{uMax,vMax},Layer});
+        Vertices.push_back({v3,{uMin,vMax},Layer});
 
         Indicies.push_back(start);
         Indicies.push_back(start + 1);
@@ -131,4 +131,6 @@ namespace Engine{
         Indicies.push_back(start + 2);
         Indicies.push_back(start + 3);
     }
+    
+    
 }
