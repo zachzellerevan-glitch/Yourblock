@@ -63,8 +63,9 @@ namespace Engine{
             break;
         }
 
-        if(nx < 0 || nx >= Chunk::WIDTH || nz < 0 || nz >= Chunk::DEPTH || ny < 0 || ny >= Chunk::HEIGHT)
-            return true;
+        if(nx < 0 || nx >= Chunk::WIDTH || nz < 0 || nz >= Chunk::DEPTH || ny < 0 || ny >= Chunk::HEIGHT){
+            
+        }
 
         const auto & Attribution = BlockRegistry::Get().GetAttribution(chunk.GetBlockType(nx,ny,nz));
         if(Attribution.IsTransparent){

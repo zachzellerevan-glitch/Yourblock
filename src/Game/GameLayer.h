@@ -6,6 +6,7 @@
 #include "Render/TextureArray.h"
 #include "World/ChunkMesher.h"
 #include "World/Chunk.h"
+#include "World/World.h"
 #include "YBpch.h"
 
 namespace Engine{
@@ -20,6 +21,8 @@ namespace Engine{
             std::unique_ptr<Camera> m_Camera;
             std::unique_ptr<Texture> m_Texture;
             std::unique_ptr<Chunk> m_Chunk;
+            ChunkCoord m_ChunkCoord = {0,0};
+            std::unique_ptr<World> m_World;
             bool m_FirstFrame = true;
             unsigned int m_VAO,m_VBO,m_EBO;
             bool m_ESC = false;

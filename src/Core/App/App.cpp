@@ -9,8 +9,8 @@ namespace Engine{
     class ExampleLayer : public Layer{
         public:
             virtual void OnUpdate(float dt) override{
-                if(Input::IsKeyPressed(GLFW_KEY_W))
-                    printf("ExampleLayer::W pressed.\n");
+                if(Input::IsKeyPressed(GLFW_KEY_W));
+                    //printf("ExampleLayer::W pressed.\n");
             }
     };
     

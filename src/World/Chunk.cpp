@@ -1,10 +1,14 @@
 #include "Chunk.h"
 #include "ChunkMesher.h"
 #include "ChunkMesh.h"
-#include "Render/Shader.h"
+
+
+
 
 namespace Engine{
-    Chunk::Chunk(int chunkx, int chunkz) : m_ChunkX(chunkx),m_ChunkZ(chunkz){
+   
+
+    Chunk::Chunk(const ChunkCoord & Coord) : m_ChunkCoord(Coord){
         m_Blocks.fill(static_cast<uint16_t>(BlockType::AIR));
     }
 
@@ -35,6 +39,9 @@ namespace Engine{
             }
         }
         SetBlock(1,25,1,BlockType::GRASS);
+        SetBlock(0,24,0,BlockType::DIRT);
+        SetBlock(2,26,2,BlockType::STONE);
+        SetBlock(3,27,3,BlockType::SAND);
     }
 
     BlockType Chunk::GetBlockType(int x, int y, int z) const{
@@ -48,6 +55,12 @@ namespace Engine{
         if (!m_Mesh) m_Mesh = std::make_unique<ChunkMesh>();
         m_Mesh->Upload(vertices, indices);
         m_IsMeshDirty = false;
+    }
+
+    void Chunk::Render(){
+        if(m_Mesh && m_Mesh->IsValid()){
+            m_Mesh->Draw();
+        }
     }
 
     void Chunk::Render(Shader &shader){

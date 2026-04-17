@@ -2,7 +2,7 @@
 
 #include "YBpch.h"
 #include "Block.h"
-#include "Vertex.h"
+#include "Render/Vertex.h"
 #include <glm/glm.hpp>
 
 

@@ -2,7 +2,7 @@
 
 #include "YBpch.h"
 #include "ChunkMesher.h"
-#include "Vertex.h"
+#include "Render/Vertex.h"
 
 namespace Engine{
      class ChunkMesh{

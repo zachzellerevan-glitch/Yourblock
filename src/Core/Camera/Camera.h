@@ -21,8 +21,10 @@ namespace Engine{
             void SetRotation(float Yaw,float Pitch);
             void SetAspectRatio(float AspectRatio);
             void EnableFly(bool flag);
+            void SetCameraSpeed(float Speed){m_CameraSpeed = Speed;};
             inline glm::mat4 GetViewMartix() const {return m_ViewMartix;}
             inline glm::mat4 GetProjectionMartix() const {return m_ProjectionMartix;}
+            inline glm::vec3 GetPosition() const {return m_Position;}
 
             void CameraMove(MoveDirection movement,float dt);
             void CameraView(float xoffset,float yoffset);

@@ -10,9 +10,11 @@ namespace Engine{
         
         BlockRegistry::Get();
         
-        m_Chunk = std::make_unique<Chunk>(0,0);
-        m_Chunk->GenerateFlatChunk();
-        m_Chunk->RebuildMesh();
+        //m_Chunk = std::make_unique<Chunk>(m_ChunkCoord);
+        //m_Chunk->GenerateFlatChunk();
+        //m_Chunk->RebuildMesh();
+
+        m_World = std::make_unique<World>(5);
 
         m_Shader = std::make_unique<Shader>("assets/Shader/Vertex.vs","assets/Shader/Fragment.fs");
 
@@ -26,6 +28,7 @@ namespace Engine{
         if(m_FirstFrame){
             glfwSetInputMode(Application::GetApp().GetWindow().GetWindowHandle(),GLFW_CURSOR,GLFW_CURSOR_DISABLED);
             Input::Get().ResetMouseDelta();
+             
             m_FirstFrame = false;
         }
         glClearColor(0.5f,0.0f,1.0f,1.0f);
@@ -33,30 +36,34 @@ namespace Engine{
         m_Shader->Use();
         
         if(Input::IsKeyPressed(GLFW_KEY_W)){
-            printf("GameLayer::W pressed.\n");
+            //printf("GameLayer::W pressed.\n");
             m_Camera->CameraMove(Camera::MoveDirection::FORWARD,dt);
         }
         if(Input::IsKeyPressed(GLFW_KEY_S)){
-            printf("GameLayer::S pressed.\n");
+            //printf("GameLayer::S pressed.\n");
             m_Camera->CameraMove(Camera::MoveDirection::BACKWARD,dt);
         }
         if(Input::IsKeyPressed(GLFW_KEY_A)){
-            printf("GameLayer::A pressed.\n");
+            //printf("GameLayer::A pressed.\n");
             m_Camera->CameraMove(Camera::MoveDirection::LEFT,dt);
         }
         if(Input::IsKeyPressed(GLFW_KEY_D)){
-            printf("GameLayer::D pressed.\n");
+            //printf("GameLayer::D pressed.\n");
             m_Camera->CameraMove(Camera::MoveDirection::RIGHT,dt);
         }
         if(Input::IsKeyPressed(GLFW_KEY_SPACE)){
-            printf("GameLayer::SPACE pressed.\n");
+            //printf("GameLayer::SPACE pressed.\n");
             m_Camera->CameraMove(Camera::MoveDirection::UP,dt);
         }
         if(Input::IsKeyPressed(GLFW_KEY_LEFT_SHIFT)){
-            printf("GameLayer::Left Shift pressed.\n");
+            //printf("GameLayer::Left Shift pressed.\n");
             m_Camera->CameraMove(Camera::MoveDirection::DOWN,dt);
         }
-
+        if(Input::IsKeyPressed(GLFW_KEY_LEFT_CONTROL)){
+            m_Camera->SetCameraSpeed(10.0f);
+        }else{
+            m_Camera->SetCameraSpeed(5.0f);
+        }
         //printf("GameLayer::MousePos::%d,%d\n",(int)Input::GetMouseX(),(int)Input::GetMouseY());
         auto [dx,dy] = Input::GetDeltaMousePos();
         m_Camera->CameraView(dx,dy);
@@ -71,7 +78,9 @@ namespace Engine{
         TextureArray::Get().Bind(0);    
         m_Shader->SetUniform("u_TextureArray",0);
 
-        m_Chunk->Render(*m_Shader);
+        //m_Chunk->Render(*m_Shader);
+        m_World->Update(m_Camera->GetPosition());
+        m_World->Render(*m_Shader);
     }
 
     void GameLayer::OnDetach(){
