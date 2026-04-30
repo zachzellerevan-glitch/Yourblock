@@ -3,7 +3,7 @@
 #include "YBpch.h"
 #include "Block.h"
 #include "Render/Shader.h"
-
+#include "Render/Vertex.h"
 
 namespace Engine{
      struct ChunkCoord{
@@ -26,6 +26,7 @@ namespace Engine{
             BlockType GetBlockType(int x,int y,int z) const;
             void RebuildMesh();
             void Render();
+            void UploadMesh(std::vector<Vertex> &&vertices,std::vector<uint32_t> &&indices);
             void Render(Shader & shader);
             //const BlockAttribution & GetBlockAttribution(int x,int y,int z) const;
             inline static uint16_t GetIndex(int x,int y,int z){ return (y * DEPTH + z) * WIDTH + x;}

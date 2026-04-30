@@ -38,10 +38,10 @@ namespace Engine{
                 }
             }
         }
-        SetBlock(1,25,1,BlockType::GRASS);
-        SetBlock(0,24,0,BlockType::DIRT);
+        // SetBlock(1,25,1,BlockType::GRASS);
+        // SetBlock(0,24,0,BlockType::DIRT);
         SetBlock(2,26,2,BlockType::STONE);
-        SetBlock(3,27,3,BlockType::SAND);
+        // SetBlock(3,27,3,BlockType::SAND);
     }
 
     BlockType Chunk::GetBlockType(int x, int y, int z) const{
@@ -61,6 +61,14 @@ namespace Engine{
         if(m_Mesh && m_Mesh->IsValid()){
             m_Mesh->Draw();
         }
+    }
+
+    void Chunk::UploadMesh(std::vector<Vertex> &&vertices, std::vector<uint32_t> &&indices){
+        if(!m_Mesh){
+            m_Mesh = std::make_unique<ChunkMesh>();
+        }
+        m_Mesh->Upload(vertices,indices);
+        m_IsMeshDirty = true;
     }
 
     void Chunk::Render(Shader &shader){

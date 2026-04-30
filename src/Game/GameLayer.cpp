@@ -14,7 +14,7 @@ namespace Engine{
         //m_Chunk->GenerateFlatChunk();
         //m_Chunk->RebuildMesh();
 
-        m_World = std::make_unique<World>(5);
+        m_World = std::make_unique<World>(10);
 
         m_Shader = std::make_unique<Shader>("assets/Shader/Vertex.vs","assets/Shader/Fragment.fs");
 
