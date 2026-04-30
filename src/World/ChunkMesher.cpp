@@ -1,13 +1,14 @@
 #include "ChunkMesher.h"
 #include "Chunk.h"
+#include "World.h"
 
 namespace Engine{
-    void ChunkMesher::GenerateMesh(const Chunk &chunk, std::vector<Vertex> &Verticies, std::vector<uint32_t> &Indicies) {
+    void ChunkMesher::GenerateMesh(const Chunk &chunk, std::vector<Vertex> &Verticies, std::vector<uint32_t> &Indicies,const World * world) {
         Verticies.clear();
         Indicies.clear();
 
-        Verticies.reserve(65536);
-        Indicies.reserve(98304);
+        // Verticies.reserve(65536);
+        // Indicies.reserve(98304);
 
         for(int x = 0;x < Chunk::WIDTH;x++){
             for(int y = 0;y < Chunk::HEIGHT;y++){
@@ -16,22 +17,22 @@ namespace Engine{
                     if(blocktype == BlockType::AIR) continue;
 
                     const auto & Attribution = BlockRegistry::Get().GetAttribution(blocktype);
-                    if(IsFaceVisible(chunk,x,y,z,Face::PositiveX)){
+                    if(IsFaceVisible(chunk,x,y,z,Face::PositiveX,world)){
                         AddFace(Verticies,Indicies,x,y,z,Face::PositiveX,Attribution.TextureSide);
                     }
-                    if(IsFaceVisible(chunk,x,y,z,Face::NegativeX)){
+                    if(IsFaceVisible(chunk,x,y,z,Face::NegativeX,world)){
                      AddFace(Verticies,Indicies,x,y,z,Face::NegativeX,Attribution.TextureSide);
                     }
-                    if(IsFaceVisible(chunk,x,y,z,Face::PositiveY)){
+                    if(IsFaceVisible(chunk,x,y,z,Face::PositiveY,world)){
                      AddFace(Verticies,Indicies,x,y,z,Face::PositiveY,Attribution.TextureTop);
                     }
-                    if(IsFaceVisible(chunk,x,y,z,Face::NegativeY)){
+                    if(IsFaceVisible(chunk,x,y,z,Face::NegativeY,world)){
                      AddFace(Verticies,Indicies,x,y,z,Face::NegativeY,Attribution.TextureBottom);
                     }
-                    if(IsFaceVisible(chunk,x,y,z,Face::PositiveZ)){
+                    if(IsFaceVisible(chunk,x,y,z,Face::PositiveZ,world)){
                      AddFace(Verticies,Indicies,x,y,z,Face::PositiveZ,Attribution.TextureSide);
                     }
-                    if(IsFaceVisible(chunk,x,y,z,Face::NegativeZ)){
+                    if(IsFaceVisible(chunk,x,y,z,Face::NegativeZ,world)){
                         AddFace(Verticies,Indicies,x,y,z,Face::NegativeZ,Attribution.TextureSide);
                     }
                 }
@@ -39,7 +40,7 @@ namespace Engine{
         }
     }
 
-    bool ChunkMesher::IsFaceVisible(const Chunk &chunk, int x, int y, int z, Face face){
+    bool ChunkMesher::IsFaceVisible(const Chunk &chunk, int x, int y, int z, Face face,const World *world){
         int nx = x,ny = y,nz = z;
         switch (face)
         {
@@ -64,6 +65,16 @@ namespace Engine{
         }
 
         if(nx < 0 || nx >= Chunk::WIDTH || nz < 0 || nz >= Chunk::DEPTH || ny < 0 || ny >= Chunk::HEIGHT){
+            // if(world){
+            //     int WorldX = chunk.GetChunkX() * Chunk::WIDTH + nx;
+            //     int WorldZ = chunk.GetChunkZ() * Chunk::DEPTH + nz;
+            //     BlockType block = world->GetBlock(WorldX,ny,WorldZ);
+            //     const auto & Attr = BlockRegistry::Get().GetAttribution(block);
+            //     if(Attr.IsTransparent){
+            //         return true;
+            //     }
+            //     return false;
+            // }
             return true;
         }
 

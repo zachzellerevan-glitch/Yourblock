@@ -13,9 +13,11 @@ namespace Engine{
         };
     };
     
+    class World;
     class ChunkMesh;
     class Chunk{
         public:
+            //TODO:memory overflow
             static constexpr int WIDTH = 16;
             static constexpr int HEIGHT = 256;
             static constexpr int DEPTH = 16;
@@ -28,6 +30,10 @@ namespace Engine{
             void Render();
             void UploadMesh(std::vector<Vertex> &&vertices,std::vector<uint32_t> &&indices);
             void Render(Shader & shader);
+            void SetDirty(bool flag){m_IsMeshDirty = flag;}
+            bool GetDirty(){return m_IsMeshDirty;}
+            inline int GetChunkX() const{return m_ChunkCoord.x;}
+            inline int GetChunkZ() const{return m_ChunkCoord.z;}
             //const BlockAttribution & GetBlockAttribution(int x,int y,int z) const;
             inline static uint16_t GetIndex(int x,int y,int z){ return (y * DEPTH + z) * WIDTH + x;}
 

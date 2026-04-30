@@ -18,7 +18,7 @@ namespace Engine{
 
         m_Shader = std::make_unique<Shader>("assets/Shader/Vertex.vs","assets/Shader/Fragment.fs");
 
-        m_Camera = std::make_unique<Camera>(90.0f,1920/1080,0.1f,100.0f);
+        m_Camera = std::make_unique<Camera>(90.0f,1920/1080,0.1f,500.0f);
         m_Camera->SetPosition(glm::vec3(8.0f,30.0f,8.0f));
         m_Camera->SetRotation(-90.0f,-30.0f);
         glEnable(GL_DEPTH_TEST);
@@ -63,6 +63,14 @@ namespace Engine{
             m_Camera->SetCameraSpeed(10.0f);
         }else{
             m_Camera->SetCameraSpeed(5.0f);
+        }
+        if(Input::IsKeyPressed(GLFW_KEY_V)){
+            std::cout<<"Pos:"<<m_Camera->GetPosition().x<<","<<m_Camera->GetPosition().y<<","<<m_Camera->GetPosition().z<<std::endl;
+            m_World->SetBlock(m_Camera->GetPosition().x,m_Camera->GetPosition().y,m_Camera->GetPosition().z,BlockType::SAND);
+        }
+        if(Input::IsKeyPressed(GLFW_KEY_C)){
+            std::cout<<"Pos:"<<m_Camera->GetPosition().x<<","<<m_Camera->GetPosition().y<<","<<m_Camera->GetPosition().z<<std::endl;
+            m_World->SetBlock(m_Camera->GetPosition().x,m_Camera->GetPosition().y,m_Camera->GetPosition().z,BlockType::AIR);
         }
         //printf("GameLayer::MousePos::%d,%d\n",(int)Input::GetMouseX(),(int)Input::GetMouseY());
         auto [dx,dy] = Input::GetDeltaMousePos();

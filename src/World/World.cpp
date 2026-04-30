@@ -24,7 +24,7 @@ namespace Engine{
 
     void World::Update(const glm::vec3 &PlayerPos){
         ProcessCompleteChunk();
-
+       
         ChunkCoord PlayerChunk;
         PlayerChunk.x = static_cast<int>(std::floor(PlayerPos.x / Chunk::WIDTH)); //Chunk index start from 0 so floor
         PlayerChunk.z = static_cast<int>(std::floor(PlayerPos.z / Chunk::DEPTH));
@@ -51,6 +51,12 @@ namespace Engine{
                 it++;
             }
         }
+
+
+        for(auto & [coord,chunk] : m_ChunkHash){
+            if(chunk->GetDirty())
+                chunk->RebuildMesh();
+        }
     }
     
     void World::Render(Shader &shader){
@@ -61,8 +67,42 @@ namespace Engine{
         }
     }
 
+    BlockType World::GetBlock(int WorldX, int WorldY, int WorldZ) const{
+        int inChunkX,inChunkZ;
+        ChunkCoord cCoord;
+        cCoord.x = WorldX >= 0 ? WorldX / Chunk::WIDTH : (WorldX + 1) / Chunk::WIDTH - 1;
+        cCoord.z = WorldZ >= 0 ? WorldZ / Chunk::DEPTH : (WorldZ + 1) / Chunk::DEPTH - 1;
+
+        inChunkX = WorldX - cCoord.x * Chunk::WIDTH;
+        inChunkZ = WorldZ - cCoord.z * Chunk::DEPTH; 
+        if(inChunkX < 0) inChunkX += Chunk::WIDTH;
+        if(inChunkZ < 0) inChunkZ += Chunk::DEPTH;
+
+        if(WorldY > Chunk::HEIGHT) return BlockType::AIR;
+
+        auto chunk = GetChunk(cCoord);
+        if(!chunk) return BlockType::AIR;
+        return chunk->GetBlockType(inChunkX,WorldY,inChunkZ);
+    }
+
     void World::SetBlock(int WorldX, int WorldY, int WorldZ, BlockType block){
-        
+        int inChunkX,inChunkZ;
+        //Calculate Chunk coordinate
+        ChunkCoord cCoord;
+        cCoord.x = WorldX >= 0 ? WorldX / Chunk::WIDTH : (WorldX + 1) / Chunk::WIDTH - 1;
+        cCoord.z = WorldZ >= 0 ? WorldZ / Chunk::DEPTH : (WorldZ + 1) / Chunk::DEPTH - 1;
+
+        inChunkX = WorldX - cCoord.x * Chunk::WIDTH;
+        inChunkZ = WorldZ - cCoord.z * Chunk::DEPTH; 
+        if(inChunkX < 0) inChunkX += Chunk::WIDTH;
+        if(inChunkZ < 0) inChunkZ += Chunk::DEPTH;
+
+        if(WorldY > Chunk::HEIGHT) return;
+
+        auto chunk = GetChunk(cCoord);
+        chunk->SetBlock(inChunkX,WorldY,inChunkZ,block);
+
+        chunk->SetDirty(true);
     }
 
     Chunk *World::GetChunk(const ChunkCoord &Coord)
@@ -93,7 +133,21 @@ namespace Engine{
             auto & chunk = result.chunk;
             chunk->UploadMesh(std::move(result.vertices),std::move(result.indices));
             m_ChunkHash[result.coord] = std::move(chunk);
+
+            // const int dx[6] = {1, -1, 0, 0, 0, 0};
+            // const int dz[6] = {0, 0, 0, 0, 1, -1};
+            // for (int i = 0; i < 6; ++i) {
+            //     ChunkCoord neighbor;
+            //     neighbor.x = result.coord.x + dx[i];
+            //     neighbor.z = result.coord.z + dz[i];
+            //     auto it = m_ChunkHash.find(neighbor);
+            //     if (it != m_ChunkHash.end()) {
+            //         it->second->SetDirty(true);
+            //     }
+            // }
         }
+
+        
     }
 
     void World::GenerateChunkData(const ChunkCoord & Coord){
@@ -109,7 +163,7 @@ namespace Engine{
             
             std::vector<Vertex> vertices;
             std::vector<uint32_t> indices;
-            ChunkMesher::GenerateMesh(*chunk,vertices,indices);
+            ChunkMesher::GenerateMesh(*chunk,vertices,indices,this);
 
             ChunkBuildResult result;
             result.coord = Coord;
