@@ -31,6 +31,7 @@ namespace Engine{
              
             m_FirstFrame = false;
         }
+
         glClearColor(0.5f,0.0f,1.0f,1.0f);
         glClear(GL_COLOR_BUFFER_BIT |  GL_DEPTH_BUFFER_BIT);
         m_Shader->Use();
@@ -65,14 +66,37 @@ namespace Engine{
             m_Camera->SetCameraSpeed(5.0f);
         }
         if(Input::IsKeyPressed(GLFW_KEY_V)){
-            std::cout<<"Pos:"<<m_Camera->GetPosition().x<<","<<m_Camera->GetPosition().y<<","<<m_Camera->GetPosition().z<<std::endl;
+            //std::cout<<"Pos:"<<m_Camera->GetPosition().x<<","<<m_Camera->GetPosition().y<<","<<m_Camera->GetPosition().z<<std::endl;
+            std::cout<<"Pos:"<<m_Camera->GetPosition()<<std::endl;
             m_World->SetBlock(m_Camera->GetPosition().x,m_Camera->GetPosition().y,m_Camera->GetPosition().z,BlockType::SAND);
         }
         if(Input::IsKeyPressed(GLFW_KEY_C)){
-            std::cout<<"Pos:"<<m_Camera->GetPosition().x<<","<<m_Camera->GetPosition().y<<","<<m_Camera->GetPosition().z<<std::endl;
+            //std::cout<<"Pos:"<<m_Camera->GetPosition().x<<","<<m_Camera->GetPosition().y<<","<<m_Camera->GetPosition().z<<std::endl;
+            std::cout<<"Pos:"<<m_Camera->GetPosition()<<std::endl;
             m_World->SetBlock(m_Camera->GetPosition().x,m_Camera->GetPosition().y,m_Camera->GetPosition().z,BlockType::AIR);
         }
-        //printf("GameLayer::MousePos::%d,%d\n",(int)Input::GetMouseX(),(int)Input::GetMouseY());
+        if(Input::IsKeyPressed(GLFW_KEY_X)){
+            //std::cout<<"Pos:"<<m_Camera->GetPosition().x<<","<<m_Camera->GetPosition().y<<","<<m_Camera->GetPosition().z<<std::endl;
+            std::cout<<"Pos:"<<m_Camera->GetPosition()<<std::endl;
+            std::cout<<"Front:"<<m_Camera->GetFront().x<<","<<m_Camera->GetFront().y<<","<<m_Camera->GetFront().z<<std::endl;
+        }
+
+        if(m_MouseLeftHold){
+            float CurTime = Timer::Get().GetCurrentTime();
+            if(CurTime - m_LastBreakTime >= m_BreakInterval){
+                BreakBlock();
+                m_LastBreakTime = CurTime;
+            }
+        }
+
+        if(m_MouseRightHold){
+            float CurTime = Timer::Get().GetCurrentTime();
+            if(CurTime - m_LastPlaceTime >= m_PlaceInterval){
+                PlaceBlock();
+                m_LastPlaceTime = CurTime;
+            }
+        }
+
         auto [dx,dy] = Input::GetDeltaMousePos();
         m_Camera->CameraView(dx,dy);
 
@@ -133,5 +157,58 @@ namespace Engine{
             m_Camera->SetAspectRatio(aspect);
             return false;
         });
+
+        dispatcher.Dispatch<MouseButtonPressedEvent>([this](MouseButtonPressedEvent & event){
+            if(event.GetMouseButton() == GLFW_MOUSE_BUTTON_LEFT){
+                m_MouseLeftHold = true;
+                BreakBlock();
+                m_LastBreakTime = Timer::Get().GetCurrentTime();
+                return true;
+            }
+            return false;
+        });
+
+        dispatcher.Dispatch<MouseButtonReleasedEvent>([this](MouseButtonReleasedEvent & event){
+            if(event.GetMouseButton() == GLFW_MOUSE_BUTTON_LEFT){
+                m_MouseLeftHold = false;
+                return true;
+            }
+            return false;
+        });
+
+        dispatcher.Dispatch<MouseButtonPressedEvent>([this](MouseButtonPressedEvent & event){
+            if(event.GetMouseButton() == GLFW_MOUSE_BUTTON_RIGHT){
+                m_MouseRightHold = true;
+                PlaceBlock();
+                m_LastPlaceTime = Timer::Get().GetCurrentTime();
+                return true;
+            }
+            return false;
+        });
+
+        dispatcher.Dispatch<MouseButtonReleasedEvent>([this](MouseButtonReleasedEvent & event){
+            if(event.GetMouseButton() == GLFW_MOUSE_BUTTON_RIGHT){
+                m_MouseRightHold = false;
+                return true;
+            }
+            return false;
+        });
+    }
+
+    void GameLayer::BreakBlock(){
+        RaycastHit Ray;
+        Ray = Raycaster::TraverseRay(10,m_Camera->GetPosition(),m_Camera->GetFront(),m_World.get());
+        if(!Ray.Hit) return;
+        m_World->SetBlock(Ray.HitPos,BlockType::AIR);
+    }
+    
+    void GameLayer::PlaceBlock(){
+        RaycastHit Ray;
+        Ray = Raycaster::TraverseRay(10,m_Camera->GetPosition(),m_Camera->GetFront(),m_World.get());
+        if(!Ray.Hit) return;
+        glm::ivec3 PlacePos = Ray.HitPos + Ray.HitFaceNormal;
+        glm::ivec3 CamPos = glm::ivec3(glm::floor(m_Camera->GetPosition()));
+        if(PlacePos == CamPos) return;
+        m_World->SetBlock(PlacePos,BlockType::SAND);
     }
 }

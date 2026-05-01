@@ -31,6 +31,7 @@ namespace Engine{
             void Render(Shader & shader);
             BlockType GetBlock(int WorldX,int WorldY,int WorldZ) const;
             void SetBlock(int WorldX,int WorldY,int WorldZ,BlockType block);
+            void SetBlock(glm::vec3 DestPos,BlockType block);
             Chunk * GetChunk(const ChunkCoord & Coord);
             const Chunk * GetChunk(const ChunkCoord & Coord) const;
             bool IsChunkVisible() const;

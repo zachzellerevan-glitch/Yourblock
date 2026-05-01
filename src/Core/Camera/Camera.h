@@ -7,6 +7,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include <ostream>
 
 
 
@@ -25,7 +26,7 @@ namespace Engine{
             inline glm::mat4 GetViewMartix() const {return m_ViewMartix;}
             inline glm::mat4 GetProjectionMartix() const {return m_ProjectionMartix;}
             inline glm::vec3 GetPosition() const {return m_Position;}
-
+            inline glm::vec3 GetFront() const {return m_Front;}
             void CameraMove(MoveDirection movement,float dt);
             void CameraView(float xoffset,float yoffset);
 
@@ -41,4 +42,13 @@ namespace Engine{
             glm::mat4 m_ViewMartix;
             glm::mat4 m_ProjectionMartix; //投影
     };
+
+    inline std::ostream & operator<<(std::ostream & os,glm::vec3 vec){
+        return os<<std::floor(vec.x)<<","<<std::floor(vec.y)<<","<<std::floor(vec.z);
+    }
+
+    // inline bool operator==(glm::vec3 v1,glm::vec3 v2){
+    //     if(v1.x == v2.x && v1.y == v2.y && v1.z == v2.z) return true;
+    //     return false;
+    // }
 }

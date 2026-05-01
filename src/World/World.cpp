@@ -105,6 +105,13 @@ namespace Engine{
         chunk->SetDirty(true);
     }
 
+    void World::SetBlock(glm::vec3 DestPos, BlockType block){
+        int WorldX = std::floor(DestPos.x);
+        int WorldY = std::floor(DestPos.y);
+        int WorldZ = std::floor(DestPos.z);
+        SetBlock(WorldX,WorldY,WorldZ,block);
+    }
+
     Chunk *World::GetChunk(const ChunkCoord &Coord)
     {
         auto it = m_ChunkHash.find(Coord);

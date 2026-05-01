@@ -7,6 +7,7 @@
 #include "World/ChunkMesher.h"
 #include "World/Chunk.h"
 #include "World/World.h"
+#include "World/Raycaster.h"
 #include "YBpch.h"
 
 namespace Engine{
@@ -17,6 +18,17 @@ namespace Engine{
             virtual void OnUpdate(float dt) override;
             virtual void OnEvent(Event & event) override;
         private:
+            void BreakBlock();
+            void PlaceBlock();
+    
+        private:
+            bool m_MouseLeftHold = false;
+            bool m_MouseRightHold = false;
+            float m_LastBreakTime = 0.0f;
+            float m_LastPlaceTime = 0.0f;
+            float m_BreakInterval = 0.15f;
+            float m_PlaceInterval = 0.2f;
+
             std::unique_ptr<Shader> m_Shader;
             std::unique_ptr<Camera> m_Camera;
             std::unique_ptr<Texture> m_Texture;
