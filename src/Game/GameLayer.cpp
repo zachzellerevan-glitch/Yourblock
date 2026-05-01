@@ -16,7 +16,7 @@ namespace Engine{
 
         m_World = std::make_unique<World>(10);
 
-        m_Shader = std::make_unique<Shader>("assets/Shader/Vertex.vs","assets/Shader/Fragment.fs");
+        m_Shader = std::make_unique<Shader>("assets/Shader/Vertex.glsl","assets/Shader/Fragment.glsl");
 
         m_Camera = std::make_unique<Camera>(90.0f,1920/1080,0.1f,500.0f);
         m_Camera->SetPosition(glm::vec3(8.0f,30.0f,8.0f));
