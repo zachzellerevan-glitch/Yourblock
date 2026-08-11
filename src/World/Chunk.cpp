@@ -68,7 +68,7 @@ namespace Engine{
             m_Mesh = std::make_unique<ChunkMesh>();
         }
         m_Mesh->Upload(vertices,indices);
-        m_IsMeshDirty = true;
+        m_IsMeshDirty = false;
     }
 
     void Chunk::Render(Shader &shader){

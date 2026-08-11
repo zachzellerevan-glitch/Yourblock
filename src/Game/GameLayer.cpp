@@ -18,7 +18,7 @@ namespace Engine{
 
         m_Shader = std::make_unique<Shader>("assets/Shader/Vertex.glsl","assets/Shader/Fragment.glsl");
 
-        m_Camera = std::make_unique<Camera>(90.0f,1920/1080,0.1f,500.0f);
+        m_Camera = std::make_unique<Camera>(90.0f,1920.0f/1080.0f,0.1f,500.0f);
         m_Camera->SetPosition(glm::vec3(8.0f,30.0f,8.0f));
         m_Camera->SetRotation(-90.0f,-30.0f);
         glEnable(GL_DEPTH_TEST);
