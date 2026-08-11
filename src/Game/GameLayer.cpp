@@ -15,7 +15,7 @@ namespace Engine{
         //m_Chunk->RebuildMesh();
 
         m_World = std::make_unique<World>(10);
-
+        m_Player = std::make_unique<Player>(glm::vec3(8.0f,30.0f,8.0f));
         m_Shader = std::make_unique<Shader>("assets/Shader/Vertex.glsl","assets/Shader/Fragment.glsl");
 
         m_Camera = std::make_unique<Camera>(90.0f,1920.0f/1080.0f,0.1f,500.0f);
@@ -36,35 +36,47 @@ namespace Engine{
         glClear(GL_COLOR_BUFFER_BIT |  GL_DEPTH_BUFFER_BIT);
         m_Shader->Use();
         
-        if(Input::IsKeyPressed(GLFW_KEY_W)){
-            //printf("GameLayer::W pressed.\n");
-            m_Camera->CameraMove(Camera::MoveDirection::FORWARD,dt);
-        }
-        if(Input::IsKeyPressed(GLFW_KEY_S)){
-            //printf("GameLayer::S pressed.\n");
-            m_Camera->CameraMove(Camera::MoveDirection::BACKWARD,dt);
-        }
-        if(Input::IsKeyPressed(GLFW_KEY_A)){
-            //printf("GameLayer::A pressed.\n");
-            m_Camera->CameraMove(Camera::MoveDirection::LEFT,dt);
-        }
-        if(Input::IsKeyPressed(GLFW_KEY_D)){
-            //printf("GameLayer::D pressed.\n");
-            m_Camera->CameraMove(Camera::MoveDirection::RIGHT,dt);
-        }
-        if(Input::IsKeyPressed(GLFW_KEY_SPACE)){
-            //printf("GameLayer::SPACE pressed.\n");
-            m_Camera->CameraMove(Camera::MoveDirection::UP,dt);
-        }
-        if(Input::IsKeyPressed(GLFW_KEY_LEFT_SHIFT)){
-            //printf("GameLayer::Left Shift pressed.\n");
-            m_Camera->CameraMove(Camera::MoveDirection::DOWN,dt);
-        }
-        if(Input::IsKeyPressed(GLFW_KEY_LEFT_CONTROL)){
-            m_Camera->SetCameraSpeed(10.0f);
-        }else{
-            m_Camera->SetCameraSpeed(5.0f);
-        }
+        // if(Input::IsKeyPressed(GLFW_KEY_W)){
+        //     //printf("GameLayer::W pressed.\n");
+        //     m_Camera->CameraMove(Camera::MoveDirection::FORWARD,dt);
+        // }
+        // if(Input::IsKeyPressed(GLFW_KEY_S)){
+        //     //printf("GameLayer::S pressed.\n");
+        //     m_Camera->CameraMove(Camera::MoveDirection::BACKWARD,dt);
+        // }
+        // if(Input::IsKeyPressed(GLFW_KEY_A)){
+        //     //printf("GameLayer::A pressed.\n");
+        //     m_Camera->CameraMove(Camera::MoveDirection::LEFT,dt);
+        // }
+        // if(Input::IsKeyPressed(GLFW_KEY_D)){
+        //     //printf("GameLayer::D pressed.\n");
+        //     m_Camera->CameraMove(Camera::MoveDirection::RIGHT,dt);
+        // }
+        // if(Input::IsKeyPressed(GLFW_KEY_SPACE)){
+        //     //printf("GameLayer::SPACE pressed.\n");
+        //     m_Camera->CameraMove(Camera::MoveDirection::UP,dt);
+        // }
+        // if(Input::IsKeyPressed(GLFW_KEY_LEFT_SHIFT)){
+        //     //printf("GameLayer::Left Shift pressed.\n");
+        //     m_Camera->CameraMove(Camera::MoveDirection::DOWN,dt);
+        // }
+        // if(Input::IsKeyPressed(GLFW_KEY_LEFT_CONTROL)){
+        //     m_Camera->SetCameraSpeed(10.0f);
+        // }else{
+        //     m_Camera->SetCameraSpeed(5.0f);
+        // }
+        glm::vec3 moveDir(0.0f);
+        glm::vec3 frontH = glm::normalize(glm::vec3(m_Camera->GetFront().x, 0.0f, m_Camera->GetFront().z));
+        if(Input::IsKeyPressed(GLFW_KEY_W)) moveDir += frontH;
+        if(Input::IsKeyPressed(GLFW_KEY_S)) moveDir -= frontH;
+        if(Input::IsKeyPressed(GLFW_KEY_D)) moveDir += m_Camera->GetRight();
+        if(Input::IsKeyPressed(GLFW_KEY_A)) moveDir -= m_Camera->GetRight();
+        bool sprint = Input::IsKeyPressed(GLFW_KEY_LEFT_CONTROL);
+        if(glm::length(moveDir) > 0.0f) moveDir = glm::normalize(moveDir);
+        bool jump = Input::IsKeyPressed(GLFW_KEY_SPACE);
+        m_Player->Update(dt, moveDir, jump, sprint, *m_World);
+        m_Camera->SetPosition(m_Player->GetEyePosition());
+
         if(Input::IsKeyPressed(GLFW_KEY_V)){
             //std::cout<<"Pos:"<<m_Camera->GetPosition().x<<","<<m_Camera->GetPosition().y<<","<<m_Camera->GetPosition().z<<std::endl;
             std::cout<<"Pos:"<<m_Camera->GetPosition()<<std::endl;
@@ -95,6 +107,10 @@ namespace Engine{
                 PlaceBlock();
                 m_LastPlaceTime = CurTime;
             }
+        }
+
+        if(m_Player->GetPosition().y < -100.0f){
+            m_Player->Teleport(glm::vec3(8.0f,30.0f,8.0f));
         }
 
         auto [dx,dy] = Input::GetDeltaMousePos();
@@ -207,8 +223,16 @@ namespace Engine{
         Ray = Raycaster::TraverseRay(10,m_Camera->GetPosition(),m_Camera->GetFront(),m_World.get());
         if(!Ray.Hit) return;
         glm::ivec3 PlacePos = Ray.HitPos + Ray.HitFaceNormal;
-        glm::ivec3 CamPos = glm::ivec3(glm::floor(m_Camera->GetPosition()));
-        if(PlacePos == CamPos) return;
+
+        //PlayerAABBcollision
+        glm::vec3 min = m_Player->GetMinVertex();
+        glm::vec3 max = m_Player->GetMaxVertex();
+        if (PlacePos.x < max.x && min.x < PlacePos.x + 1 &&
+        PlacePos.y < max.y && min.y < PlacePos.y + 1 &&
+        PlacePos.z < max.z && min.z < PlacePos.z + 1)
+            return;
+        // glm::ivec3 CamPos = glm::ivec3(glm::floor(m_Camera->GetPosition()));
+        // if(PlacePos == CamPos) return;
         m_World->SetBlock(PlacePos,BlockType::SAND);
     }
 }

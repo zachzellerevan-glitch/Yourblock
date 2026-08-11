@@ -78,7 +78,7 @@ namespace Engine{
         if(inChunkX < 0) inChunkX += Chunk::WIDTH;
         if(inChunkZ < 0) inChunkZ += Chunk::DEPTH;
 
-        if(WorldY > Chunk::HEIGHT) return BlockType::AIR;
+        if(WorldY < 0 || WorldY >= Chunk::HEIGHT) return BlockType::AIR;
 
         auto chunk = GetChunk(cCoord);
         if(!chunk) return BlockType::AIR;
@@ -97,7 +97,7 @@ namespace Engine{
         if(inChunkX < 0) inChunkX += Chunk::WIDTH;
         if(inChunkZ < 0) inChunkZ += Chunk::DEPTH;
 
-        if(WorldY > Chunk::HEIGHT) return;
+        if(WorldY < 0 || WorldY >= Chunk::HEIGHT) return;
 
         auto chunk = GetChunk(cCoord);
         chunk->SetBlock(inChunkX,WorldY,inChunkZ,block);

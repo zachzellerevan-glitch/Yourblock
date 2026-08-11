@@ -38,7 +38,7 @@ namespace Engine{
         private:
             void ProcessCompleteChunk();
             void GenerateChunkData(const ChunkCoord & Coord);
-            int Gravity;
+            //int Gravity;
             std::mutex m_LoadingMutex,m_CompleteMutex;
             std::queue<ChunkBuildResult> m_CompleteQueue;
             std::unordered_set<ChunkCoord> m_LoadingSet;

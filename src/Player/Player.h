@@ -14,12 +14,13 @@ namespace Engine{
             static constexpr float WalkSpeed = 2.0f;
             static constexpr float RunSpeed = 4.0f;
             static constexpr float JumpVelocity = 8.0f;
-            static constexpr float Gravity = 9.8f;
+            static constexpr float Gravity = 18.6f;
             static constexpr float MaxFallVelocity = -100.0f;
 
             Player(const glm::vec3 SpawnPos);
             
-            void Update(float dt, const glm::vec3 & moveDir, bool jump, World & world);
+            void Update(float dt, const glm::vec3 & moveDir, bool jump, bool sprint, World & world);
+            void Teleport(const glm::vec3 & pos);
             glm::vec3 GetMinVertex() const{
                 return m_Position - glm::vec3(HalfWidth, 0.0f, HalfWidth);
             }
@@ -27,7 +28,7 @@ namespace Engine{
                 return m_Position + glm::vec3(HalfWidth, Height, HalfWidth);
             }
             glm::vec3 GetEyePosition() const{
-                return m_Position + glm::vec3(0.0f, Height, 0.0f);
+                return m_Position + glm::vec3(0.0f, EyeHeight, 0.0f);
             }
 
             const glm::vec3 GetPosition() const{

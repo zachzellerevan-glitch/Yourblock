@@ -9,6 +9,7 @@
 #include "World/World.h"
 #include "World/Raycaster.h"
 #include "YBpch.h"
+#include "Player/Player.h"
 
 namespace Engine{
     class GameLayer : public Layer{
@@ -33,6 +34,7 @@ namespace Engine{
             std::unique_ptr<Camera> m_Camera;
             std::unique_ptr<Texture> m_Texture;
             std::unique_ptr<Chunk> m_Chunk;
+            std::unique_ptr<Player> m_Player;
             ChunkCoord m_ChunkCoord = {0,0};
             std::unique_ptr<World> m_World;
             bool m_FirstFrame = true;

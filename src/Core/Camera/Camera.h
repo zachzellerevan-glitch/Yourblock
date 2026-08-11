@@ -27,6 +27,7 @@ namespace Engine{
             inline glm::mat4 GetProjectionMartix() const {return m_ProjectionMartix;}
             inline glm::vec3 GetPosition() const {return m_Position;}
             inline glm::vec3 GetFront() const {return m_Front;}
+            inline glm::vec3 GetRight() const {return m_Right;}
             void CameraMove(MoveDirection movement,float dt);
             void CameraView(float xoffset,float yoffset);
 
