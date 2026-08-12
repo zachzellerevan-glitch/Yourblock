@@ -1,5 +1,6 @@
 # YourBlock
->该文档由AI生成
+>该文档由AI生成.
+
 **[简体中文](README.zh-CN.md) | [English](README.md)**
 
 一个用 **C++20** 和 **OpenGL 3.3** 编写的体素沙盒游戏（Minecraft 风格），构建在一个类 Hazel 的小型引擎之上——Application 单例 + LayerStack + 类型化事件系统。
@@ -19,7 +20,7 @@
 - **方块交互**
   - 通过体素光线投射挖掘和放置方块
   - 瞄准的方块用 3D 线框高亮
-- **2D UI 叠加层系统** —— 一个四边形渲染器（`pos + uv + color`），目前画准星，可扩展画热栏、菜单、文字
+- **2D UI 叠加层系统** —— 一个四边形渲染器（`pos + uv + color`），目前画准星，(TODO:画热栏、菜单、文字)
 - **方块纹理图集**，每个方块独立配置顶面/侧面/底面纹理（`config/BlockTexture.json`）
 
 ## 操作
@@ -110,7 +111,7 @@ git submodule update --init --recursive
 - 源文件用 `file(GLOB_RECURSE)` **在 configure 时**收集——新增 `.cpp` 后要重新运行 `cmake -S . -B build`。
 - `assets/` **在 configure 时**复制到构建目录——新增着色器/纹理后要重新 configure，否则游戏读到的是旧副本。
 
-## 路线图
+## 路线图(TODO)
 
 - 物品栏 / 方块选择（目前固定放置 SAND）
 - 文字渲染（字体图集）——FPS 与坐标调试叠加层
