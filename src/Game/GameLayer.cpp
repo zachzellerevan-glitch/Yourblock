@@ -17,7 +17,7 @@ namespace Engine{
         m_World = std::make_unique<World>(10);
         m_Player = std::make_unique<Player>(glm::vec3(8.0f,30.0f,8.0f));
         m_Shader = std::make_unique<Shader>("assets/Shader/Vertex.glsl","assets/Shader/Fragment.glsl");
-
+        m_Wireframe = std::make_unique<WireframeRenderer>();
         m_Camera = std::make_unique<Camera>(90.0f,1920.0f/1080.0f,0.1f,500.0f);
         m_Camera->SetPosition(glm::vec3(8.0f,30.0f,8.0f));
         m_Camera->SetRotation(-90.0f,-30.0f);
@@ -112,6 +112,7 @@ namespace Engine{
         if(m_Player->GetPosition().y < -100.0f){
             m_Player->Teleport(glm::vec3(8.0f,30.0f,8.0f));
         }
+        
 
         auto [dx,dy] = Input::GetDeltaMousePos();
         m_Camera->CameraView(dx,dy);
@@ -129,11 +130,16 @@ namespace Engine{
         //m_Chunk->Render(*m_Shader);
         m_World->Update(m_Camera->GetPosition());
         m_World->Render(*m_Shader);
+        RaycastHit Ray;
+        Ray = Raycaster::TraverseRay(10, m_Camera->GetPosition(), m_Camera->GetFront(), m_World.get());
+        if(Ray.Hit)
+            m_Wireframe->DrawBlockBox(Ray.HitPos, glm::vec4(0.0f, 0.0f, 0.0f, 1.0f), view, projection);
     }
 
     void GameLayer::OnDetach(){
         glDeleteVertexArrays(1, &m_VAO);
         glDeleteBuffers(1, &m_VBO);
+        m_Wireframe.reset();
         m_Shader.reset();
     }
 

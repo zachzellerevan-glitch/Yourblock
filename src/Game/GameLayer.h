@@ -4,6 +4,7 @@
 #include "Render/Shader.h"
 #include "Render/Texture.h"
 #include "Render/TextureArray.h"
+#include "Render/WireframeRenderer.h"
 #include "World/ChunkMesher.h"
 #include "World/Chunk.h"
 #include "World/World.h"
@@ -38,6 +39,7 @@ namespace Engine{
             std::unique_ptr<Player> m_Player;
             ChunkCoord m_ChunkCoord = {0,0};
             std::unique_ptr<World> m_World;
+            std::unique_ptr<WireframeRenderer> m_Wireframe;
             bool m_FirstFrame = true;
             unsigned int m_VAO,m_VBO,m_EBO;
             bool m_ESC = false;
