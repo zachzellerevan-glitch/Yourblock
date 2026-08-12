@@ -13,7 +13,7 @@ namespace Engine{
         void DrawBox(const glm::vec3 & center, float halfExtent,
                      const glm::vec4 & color,
                      const glm::mat4 & view, const glm::mat4 & projection);
-        // 便捷版：画一个方块（移到格子中心 + 外扩防 z-fighting）
+        // 画一个方块（移到格子中心 + 外扩防 z-fighting）
         void DrawBlockBox(const glm::ivec3 & blockPos, const glm::vec4 & color,
                           const glm::mat4 & view, const glm::mat4 & projection);
     private:

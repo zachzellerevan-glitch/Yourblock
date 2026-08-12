@@ -1,0 +1,124 @@
+# YourBlock
+
+**[English](README.md) | [简体中文](README.zh-CN.md)**
+
+A voxel sandbox game (Minecraft-style) written in **C++20** and **OpenGL 3.3**, on top of a small Hazel-inspired engine — Application singleton + LayerStack + typed event system.
+
+> Personal learning project. The engine and the game live in one codebase so the whole thing is easy to read end-to-end.
+
+<!-- TODO: add a screenshot -->
+<!-- ![Screenshot](screenshot.png) -->
+
+## Features
+
+- **Infinite streaming voxel world** — chunks are generated asynchronously on a thread pool around the player and unloaded when far away. Terrain is currently flat.
+- **First-person player controller**
+  - AABB collision with **per-axis resolution** (X → Z → Y) — wall sliding and corner handling come for free
+  - Gravity, jumping, and sprinting (hold `Left Ctrl`)
+  - **Substepped vertical movement** — tunneling-safe regardless of frame rate
+- **Block interaction**
+  - Break and place blocks via voxel raycasting
+  - The targeted block is highlighted with a 3D wireframe outline
+- **2D UI overlay system** — a quad renderer (`pos + uv + color`) draws the crosshair today and is ready for hotbars, menus, and text
+- **Block texture atlas** with per-block top / side / bottom textures configured in `config/BlockTexture.json`
+
+## Controls
+
+| Input          | Action               |
+|----------------|----------------------|
+| `W` `A` `S` `D`| Move                 |
+| `Space`        | Jump                 |
+| `Left Ctrl`    | Sprint               |
+| Mouse          | Look                 |
+| Left click     | Break block          |
+| Right click    | Place block          |
+| `Esc`          | Capture / release cursor |
+
+Debug keys (in `GameLayer`): `V` place a block at the camera, `C` clear it, `X` print position / front vector.
+
+## Architecture
+
+The engine is modeled after [Hazel](https://github.com/TheCherno/Hazel):
+
+- `Application` singleton owns the main loop and a `LayerStack`
+- Layers (`GameLayer`, `UILayer`, …) each implement `OnAttach / OnDetach / OnUpdate / OnEvent`
+- A typed event system (`EventDispatcher` + compile-time event class registration) routes input and window events
+- Layers can be enabled / disabled by game state, so a future main menu and gameplay screen can switch cleanly
+
+Rendering is split by coordinate space:
+
+- **`Renderer2D`** — screen-space quads (`pos + uv + color`) for UI
+- **`WireframeRenderer`** — world-space lines for the block highlight
+- `Shader`, `TextureArray`, `Vertex` — block meshing and texturing
+
+## Project layout
+
+```
+src/
+  Core/     engine: App, Window, LayerStack, Event, Input, Camera, Timer, ThreadPool
+  Game/     GameLayer — main gameplay
+  Player/   player physics & AABB collision
+  Render/   Shader, Texture, TextureArray, Renderer2D, WireframeRenderer, Vertex
+  World/    Block registry, Chunk, ChunkMesher, World, Raycaster
+  UI/       UILayer — 2D overlay
+assets/
+  Shader/   GLSL shaders
+  Texture/  block textures
+config/
+  BlockTexture.json   block texture configuration
+```
+
+## Building
+
+### Prerequisites
+
+- CMake ≥ 3.20
+- A C++20 compiler
+- Git submodules: `libs/glfw`, `libs/Imgui`
+
+### Steps
+
+```bash
+git clone --recursive https://github.com/<your-username>/YourBlock.git
+cd YourBlock
+cmake -S . -B build
+cmake --build build
+```
+
+If you cloned without `--recursive`, fetch the submodules first:
+
+```bash
+git submodule update --init --recursive
+```
+
+The executable is produced in `build/`.
+
+> **Windows note:** the project is developed with MinGW-w64. On Windows you may need to pick a generator explicitly, e.g. `cmake -S . -B build -G "MinGW Makefiles"`. Any CMake-supported generator should work.
+
+## Dependencies
+
+| Library            | Purpose                 | How it's included   |
+|--------------------|-------------------------|---------------------|
+| GLFW               | windowing / input       | git submodule       |
+| GLM                | math                    | vendored headers    |
+| GLAD               | OpenGL 3.3 loader       | vendored            |
+| stb_image          | image loading           | vendored            |
+| Dear ImGui (docking)| bundled, not yet used  | git submodule       |
+
+## Development notes
+
+- Sources are collected with `file(GLOB_RECURSE)` **at configure time** — after adding a new `.cpp`, re-run `cmake -S . -B build`.
+- `assets/` is copied into the build directory **at configure time** — after adding new shaders/textures, re-run configure, or the game will read a stale copy.
+
+## Roadmap
+
+- Hotbar / block selection (the game currently places `SAND`)
+- Text rendering (font atlas) — FPS & coordinate debug overlay
+- Main menu / pause screen using the layer state switching
+- More block types and procedural (heightmap) terrain
+- Save / load world
+- Audio
+
+## License
+
+This project is licensed under the [MIT License](LICENSE).
