@@ -18,6 +18,7 @@ namespace Engine{
             virtual void OnDetach() override;
             virtual void OnUpdate(float dt) override;
             virtual void OnEvent(Event & event) override;
+            virtual bool IsEnabled() override {return m_Enable;}
         private:
             void BreakBlock();
             void PlaceBlock();
@@ -40,5 +41,6 @@ namespace Engine{
             bool m_FirstFrame = true;
             unsigned int m_VAO,m_VBO,m_EBO;
             bool m_ESC = false;
+            bool m_Enable = true;
     };
 }

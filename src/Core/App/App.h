@@ -10,13 +10,14 @@
 
 namespace Engine{
     class Application{
+        enum class GameState{MainMenu, PauseMenu, InGame};
         public:
             Application(Application & app) = delete;
 
             void Run();
             void OnEvent(Event &event);
             void PushLayer(Layer * layer);
-            void PushOverlay();
+            void PushOverlay(Layer * layer);
             void PopLayer();
             void PopOverlay();
             inline Window & GetWindow(){return *m_Window;}

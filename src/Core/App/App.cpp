@@ -1,6 +1,7 @@
 #include "YBpch.h"
 #include "App.h"
 #include "Game/GameLayer.h"
+#include "UI/UILayer.h"
 #include <GLFW/glfw3.h>
 
 #define BIND_EVENT_FN(x) std::bind(&x,this,std::placeholders::_1)
@@ -18,6 +19,7 @@ namespace Engine{
         m_Window = Window::Create();
         m_Window->SetEventCallback(BIND_EVENT_FN(Application::OnEvent));
         PushLayer(new GameLayer);
+        PushLayer(new UILayer);
         PushLayer(new ExampleLayer);
     }
 
@@ -49,6 +51,9 @@ namespace Engine{
     }
 
     
+    void Application::PushOverlay(Layer * layer){
+        m_LayerStack.PushOverlay(layer);
+    }
 
     void Application::PushLayer(Layer * layer){
         m_LayerStack.PushLayer(layer);

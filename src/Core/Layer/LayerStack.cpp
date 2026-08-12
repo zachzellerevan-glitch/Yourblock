@@ -32,12 +32,14 @@ namespace Engine{
     void LayerStack::OnUpdate(){
         float dt = Timer::Get().GetDeltaTime();
         for(Layer * layer : m_LayerStack){
+            if(!layer->IsEnabled()) continue;
             layer->OnUpdate(dt);
         }
     }
 
     void LayerStack::OnEvent(Event & event){
         for(auto it = m_LayerStack.rbegin();it != m_LayerStack.rend();++it){
+            if(!(*it)->IsEnabled()) continue;
             (*it)->OnEvent(event);
             if(event.IsHandled()) break;
         }

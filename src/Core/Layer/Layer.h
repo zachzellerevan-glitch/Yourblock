@@ -14,5 +14,8 @@ namespace Engine{
             virtual void OnDetach(){}
             virtual void OnUpdate(float dt){}
             virtual void OnEvent(Event & event){}
+            virtual bool IsEnabled(){return m_Enable;}
+        private: 
+            bool m_Enable = true;
     };
 }
