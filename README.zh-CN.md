@@ -1,5 +1,5 @@
 # YourBlock
-
+>该文档由AI生成
 **[简体中文](README.zh-CN.md) | [English](README.md)**
 
 一个用 **C++20** 和 **OpenGL 3.3** 编写的体素沙盒游戏（Minecraft 风格），构建在一个类 Hazel 的小型引擎之上——Application 单例 + LayerStack + 类型化事件系统。
