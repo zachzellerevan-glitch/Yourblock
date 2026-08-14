@@ -18,8 +18,9 @@ namespace Engine{
     Application::Application(){
         m_Window = Window::Create();
         m_Window->SetEventCallback(BIND_EVENT_FN(Application::OnEvent));
-        PushLayer(new GameLayer);
-        PushLayer(new UILayer);
+        GameLayer *gamelayer = new GameLayer;
+        PushLayer(gamelayer);
+        PushLayer(new UILayer(gamelayer->GetHotbar()));
         PushLayer(new ExampleLayer);
     }
 

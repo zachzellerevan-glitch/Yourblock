@@ -170,6 +170,33 @@ namespace Engine{
                     m_ESC = false;
                 }
             }
+            if(event.GetKeyCode() == GLFW_KEY_1 && event.GetKeyCode() <= GLFW_KEY_9){
+                m_Hotbar.SelectedSlot = 0;
+            }
+            if(event.GetKeyCode() == GLFW_KEY_2 && event.GetKeyCode() <= GLFW_KEY_9){
+                m_Hotbar.SelectedSlot = 1;
+            }
+            if(event.GetKeyCode() == GLFW_KEY_3 && event.GetKeyCode() <= GLFW_KEY_9){
+                m_Hotbar.SelectedSlot = 2;
+            }
+            if(event.GetKeyCode() == GLFW_KEY_4 && event.GetKeyCode() <= GLFW_KEY_9){
+                m_Hotbar.SelectedSlot = 3;
+            }
+            if(event.GetKeyCode() == GLFW_KEY_5 && event.GetKeyCode() <= GLFW_KEY_9){
+                m_Hotbar.SelectedSlot = 4;
+            }
+            if(event.GetKeyCode() == GLFW_KEY_6 && event.GetKeyCode() <= GLFW_KEY_9){
+                m_Hotbar.SelectedSlot = 5;
+            }
+            if(event.GetKeyCode() == GLFW_KEY_7 && event.GetKeyCode() <= GLFW_KEY_9){
+                m_Hotbar.SelectedSlot = 6;
+            }
+            if(event.GetKeyCode() == GLFW_KEY_8 && event.GetKeyCode() <= GLFW_KEY_9){
+                m_Hotbar.SelectedSlot = 7;
+            }
+            if(event.GetKeyCode() == GLFW_KEY_9 && event.GetKeyCode() <= GLFW_KEY_9){
+                m_Hotbar.SelectedSlot = 8;
+            }
             return false;
         });
 
@@ -185,7 +212,7 @@ namespace Engine{
                 m_MouseLeftHold = true;
                 BreakBlock();
                 m_LastBreakTime = Timer::Get().GetCurrentTime();
-                return true;
+                return false;
             }
             return false;
         });
@@ -193,7 +220,7 @@ namespace Engine{
         dispatcher.Dispatch<MouseButtonReleasedEvent>([this](MouseButtonReleasedEvent & event){
             if(event.GetMouseButton() == GLFW_MOUSE_BUTTON_LEFT){
                 m_MouseLeftHold = false;
-                return true;
+                return false;
             }
             return false;
         });
@@ -203,7 +230,7 @@ namespace Engine{
                 m_MouseRightHold = true;
                 PlaceBlock();
                 m_LastPlaceTime = Timer::Get().GetCurrentTime();
-                return true;
+                return false;
             }
             return false;
         });
@@ -211,8 +238,17 @@ namespace Engine{
         dispatcher.Dispatch<MouseButtonReleasedEvent>([this](MouseButtonReleasedEvent & event){
             if(event.GetMouseButton() == GLFW_MOUSE_BUTTON_RIGHT){
                 m_MouseRightHold = false;
-                return true;
+                return false;
             }
+            return false;
+        });
+
+        dispatcher.Dispatch<MouseScrolledEvent>([this](MouseScrolledEvent & event){
+            float y = event.GetYOffset();
+            if(y == 0.0f) return false;
+            int delta = (y > 0.0f) ? -1 : 1;
+            int next = (int(m_Hotbar.SelectedSlot) + delta + 9) % 9;
+            m_Hotbar.SelectedSlot = (unsigned int)next;
             return false;
         });
     }
@@ -239,6 +275,6 @@ namespace Engine{
             return;
         // glm::ivec3 CamPos = glm::ivec3(glm::floor(m_Camera->GetPosition()));
         // if(PlacePos == CamPos) return;
-        m_World->SetBlock(PlacePos,BlockType::SAND);
+        m_World->SetBlock(PlacePos, GetSelectedBlock());
     }
 }

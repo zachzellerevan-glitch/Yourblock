@@ -11,6 +11,7 @@
 #include "World/Raycaster.h"
 #include "YBpch.h"
 #include "Player/Player.h"
+#include "HotBarState.h"
 
 namespace Engine{
     class GameLayer : public Layer{
@@ -20,6 +21,8 @@ namespace Engine{
             virtual void OnUpdate(float dt) override;
             virtual void OnEvent(Event & event) override;
             virtual bool IsEnabled() override {return m_Enable;}
+            BlockType GetSelectedBlock() const {return m_Hotbar.Slots[m_Hotbar.SelectedSlot];}
+            const HotbarState* GetHotbar() const { return &m_Hotbar; }
         private:
             void BreakBlock();
             void PlaceBlock();
@@ -44,5 +47,11 @@ namespace Engine{
             unsigned int m_VAO,m_VBO,m_EBO;
             bool m_ESC = false;
             bool m_Enable = true;
+
+            HotbarState m_Hotbar ={
+                { BlockType::STONE, BlockType::DIRT, BlockType::GRASS, BlockType::SAND,
+                BlockType::STONE, BlockType::DIRT, BlockType::GRASS, BlockType::SAND, BlockType::STONE },
+                0   // SelectedSlot 默认选中第 0 栏(stone)
+            };
     };
 }
