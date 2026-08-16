@@ -3,7 +3,7 @@
 #include "Game/GameLayer.h"
 #include "UI/UILayer.h"
 #include <GLFW/glfw3.h>
-
+#include "Game/GameState.h"
 #define BIND_EVENT_FN(x) std::bind(&x,this,std::placeholders::_1)
 
 namespace Engine{
@@ -18,9 +18,11 @@ namespace Engine{
     Application::Application(){
         m_Window = Window::Create();
         m_Window->SetEventCallback(BIND_EVENT_FN(Application::OnEvent));
-        GameLayer *gamelayer = new GameLayer;
+        
+        GameUIState *uiState = new GameUIState;
+        GameLayer *gamelayer = new GameLayer(uiState);
         PushLayer(gamelayer);
-        PushLayer(new UILayer(gamelayer->GetHotbar()));
+        PushLayer(new UILayer(gamelayer->GetHotbar(), uiState));
         PushLayer(new ExampleLayer);
     }
 

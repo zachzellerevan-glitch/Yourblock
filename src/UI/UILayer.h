@@ -6,12 +6,14 @@
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 #include "Game/HotBarState.h"
+#include "Game/GameState.h"
 
 namespace Engine{
     
     class UILayer : public Layer{
         public:
-            UILayer(const HotbarState* hotbar) : m_Hotbar(hotbar) {}
+            UILayer(const HotbarState* hotbar, const GameUIState* gamestate) 
+                : m_Hotbar(hotbar), m_GameUIState(gamestate){}
             virtual void OnAttach() override;
             virtual void OnDetach() override;
             virtual void OnUpdate(float dt) override;
@@ -28,5 +30,6 @@ namespace Engine{
             float m_Height;
             float m_FPS = 0.0f;
             const HotbarState* m_Hotbar;
+            const GameUIState* m_GameUIState;
     };
 }

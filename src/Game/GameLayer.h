@@ -11,11 +11,13 @@
 #include "World/Raycaster.h"
 #include "YBpch.h"
 #include "Player/Player.h"
-#include "HotBarState.h"
+#include "Game/HotBarState.h"
+#include "Game/GameState.h"
 
 namespace Engine{
     class GameLayer : public Layer{
         public:
+            GameLayer(GameUIState* uiState) : m_GameState(uiState){}
             virtual void OnAttach() override;
             virtual void OnDetach() override;
             virtual void OnUpdate(float dt) override;
@@ -53,5 +55,6 @@ namespace Engine{
                 BlockType::STONE, BlockType::DIRT, BlockType::GRASS, BlockType::SAND, BlockType::STONE },
                 0   // SelectedSlot 默认选中第 0 栏(stone)
             };
+            GameUIState * m_GameState;
     };
 }

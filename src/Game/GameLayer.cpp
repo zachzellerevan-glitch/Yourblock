@@ -35,90 +35,66 @@ namespace Engine{
         glClearColor(0.5f,0.0f,1.0f,1.0f);
         glClear(GL_COLOR_BUFFER_BIT |  GL_DEPTH_BUFFER_BIT);
         m_Shader->Use();
+
+        if(m_GameState->State == GameState::Playing){
+            glm::vec3 moveDir(0.0f);
+            glm::vec3 frontH = glm::normalize(glm::vec3(m_Camera->GetFront().x, 0.0f, m_Camera->GetFront().z));
+            if(Input::IsKeyPressed(GLFW_KEY_W)) moveDir += frontH;
+            if(Input::IsKeyPressed(GLFW_KEY_S)) moveDir -= frontH;
+            if(Input::IsKeyPressed(GLFW_KEY_D)) moveDir += m_Camera->GetRight();
+            if(Input::IsKeyPressed(GLFW_KEY_A)) moveDir -= m_Camera->GetRight();
+            bool sprint = Input::IsKeyPressed(GLFW_KEY_LEFT_CONTROL);
+            if(glm::length(moveDir) > 0.0f) moveDir = glm::normalize(moveDir);
+            bool jump = Input::IsKeyPressed(GLFW_KEY_SPACE);
+            m_Player->Update(dt, moveDir, jump, sprint, *m_World);
+            m_TargetPov = sprint ? 100.0f : 90.0f;
+            float cur = m_Camera->GetPov();
+            m_Camera->SetPov(cur + (m_TargetPov - cur) * std::min(1.0f, 10.0f * dt));
+            
+
+            if(Input::IsKeyPressed(GLFW_KEY_V)){
+                //std::cout<<"Pos:"<<m_Camera->GetPosition().x<<","<<m_Camera->GetPosition().y<<","<<m_Camera->GetPosition().z<<std::endl;
+                std::cout<<"Pos:"<<m_Camera->GetPosition()<<std::endl;
+                m_World->SetBlock(m_Camera->GetPosition().x,m_Camera->GetPosition().y,m_Camera->GetPosition().z,BlockType::SAND);
+            }
+            if(Input::IsKeyPressed(GLFW_KEY_C)){
+                //std::cout<<"Pos:"<<m_Camera->GetPosition().x<<","<<m_Camera->GetPosition().y<<","<<m_Camera->GetPosition().z<<std::endl;
+                std::cout<<"Pos:"<<m_Camera->GetPosition()<<std::endl;
+                m_World->SetBlock(m_Camera->GetPosition().x,m_Camera->GetPosition().y,m_Camera->GetPosition().z,BlockType::AIR);
+            }
+            if(Input::IsKeyPressed(GLFW_KEY_X)){
+                //std::cout<<"Pos:"<<m_Camera->GetPosition().x<<","<<m_Camera->GetPosition().y<<","<<m_Camera->GetPosition().z<<std::endl;
+                std::cout<<"Pos:"<<m_Camera->GetPosition()<<std::endl;
+                std::cout<<"Front:"<<m_Camera->GetFront().x<<","<<m_Camera->GetFront().y<<","<<m_Camera->GetFront().z<<std::endl;
+            }
+
+            if(m_MouseLeftHold){
+                float CurTime = Timer::Get().GetCurrentTime();
+                if(CurTime - m_LastBreakTime >= m_BreakInterval){
+                    BreakBlock();
+                    m_LastBreakTime = CurTime;
+                }
+            }
+
+            if(m_MouseRightHold){
+                float CurTime = Timer::Get().GetCurrentTime();
+                if(CurTime - m_LastPlaceTime >= m_PlaceInterval){
+                    PlaceBlock();
+                    m_LastPlaceTime = CurTime;
+                }
+            }
+
+            auto [dx,dy] = Input::GetDeltaMousePos();
+            m_Camera->CameraView(dx,dy);
+        }
         
-        // if(Input::IsKeyPressed(GLFW_KEY_W)){
-        //     //printf("GameLayer::W pressed.\n");
-        //     m_Camera->CameraMove(Camera::MoveDirection::FORWARD,dt);
-        // }
-        // if(Input::IsKeyPressed(GLFW_KEY_S)){
-        //     //printf("GameLayer::S pressed.\n");
-        //     m_Camera->CameraMove(Camera::MoveDirection::BACKWARD,dt);
-        // }
-        // if(Input::IsKeyPressed(GLFW_KEY_A)){
-        //     //printf("GameLayer::A pressed.\n");
-        //     m_Camera->CameraMove(Camera::MoveDirection::LEFT,dt);
-        // }
-        // if(Input::IsKeyPressed(GLFW_KEY_D)){
-        //     //printf("GameLayer::D pressed.\n");
-        //     m_Camera->CameraMove(Camera::MoveDirection::RIGHT,dt);
-        // }
-        // if(Input::IsKeyPressed(GLFW_KEY_SPACE)){
-        //     //printf("GameLayer::SPACE pressed.\n");
-        //     m_Camera->CameraMove(Camera::MoveDirection::UP,dt);
-        // }
-        // if(Input::IsKeyPressed(GLFW_KEY_LEFT_SHIFT)){
-        //     //printf("GameLayer::Left Shift pressed.\n");
-        //     m_Camera->CameraMove(Camera::MoveDirection::DOWN,dt);
-        // }
-        // if(Input::IsKeyPressed(GLFW_KEY_LEFT_CONTROL)){
-        //     m_Camera->SetCameraSpeed(10.0f);
-        // }else{
-        //     m_Camera->SetCameraSpeed(5.0f);
-        // }
-        glm::vec3 moveDir(0.0f);
-        glm::vec3 frontH = glm::normalize(glm::vec3(m_Camera->GetFront().x, 0.0f, m_Camera->GetFront().z));
-        if(Input::IsKeyPressed(GLFW_KEY_W)) moveDir += frontH;
-        if(Input::IsKeyPressed(GLFW_KEY_S)) moveDir -= frontH;
-        if(Input::IsKeyPressed(GLFW_KEY_D)) moveDir += m_Camera->GetRight();
-        if(Input::IsKeyPressed(GLFW_KEY_A)) moveDir -= m_Camera->GetRight();
-        bool sprint = Input::IsKeyPressed(GLFW_KEY_LEFT_CONTROL);
-        if(glm::length(moveDir) > 0.0f) moveDir = glm::normalize(moveDir);
-        bool jump = Input::IsKeyPressed(GLFW_KEY_SPACE);
-        m_Player->Update(dt, moveDir, jump, sprint, *m_World);
-        m_TargetPov = sprint ? 100.0f : 90.0f;
-        float cur = m_Camera->GetPov();
-        m_Camera->SetPov(cur + (m_TargetPov - cur) * std::min(1.0f, 10.0f * dt));
+       
+        
+
         m_Camera->SetPosition(m_Player->GetEyePosition());
-
-        if(Input::IsKeyPressed(GLFW_KEY_V)){
-            //std::cout<<"Pos:"<<m_Camera->GetPosition().x<<","<<m_Camera->GetPosition().y<<","<<m_Camera->GetPosition().z<<std::endl;
-            std::cout<<"Pos:"<<m_Camera->GetPosition()<<std::endl;
-            m_World->SetBlock(m_Camera->GetPosition().x,m_Camera->GetPosition().y,m_Camera->GetPosition().z,BlockType::SAND);
-        }
-        if(Input::IsKeyPressed(GLFW_KEY_C)){
-            //std::cout<<"Pos:"<<m_Camera->GetPosition().x<<","<<m_Camera->GetPosition().y<<","<<m_Camera->GetPosition().z<<std::endl;
-            std::cout<<"Pos:"<<m_Camera->GetPosition()<<std::endl;
-            m_World->SetBlock(m_Camera->GetPosition().x,m_Camera->GetPosition().y,m_Camera->GetPosition().z,BlockType::AIR);
-        }
-        if(Input::IsKeyPressed(GLFW_KEY_X)){
-            //std::cout<<"Pos:"<<m_Camera->GetPosition().x<<","<<m_Camera->GetPosition().y<<","<<m_Camera->GetPosition().z<<std::endl;
-            std::cout<<"Pos:"<<m_Camera->GetPosition()<<std::endl;
-            std::cout<<"Front:"<<m_Camera->GetFront().x<<","<<m_Camera->GetFront().y<<","<<m_Camera->GetFront().z<<std::endl;
-        }
-
-        if(m_MouseLeftHold){
-            float CurTime = Timer::Get().GetCurrentTime();
-            if(CurTime - m_LastBreakTime >= m_BreakInterval){
-                BreakBlock();
-                m_LastBreakTime = CurTime;
-            }
-        }
-
-        if(m_MouseRightHold){
-            float CurTime = Timer::Get().GetCurrentTime();
-            if(CurTime - m_LastPlaceTime >= m_PlaceInterval){
-                PlaceBlock();
-                m_LastPlaceTime = CurTime;
-            }
-        }
-
         if(m_Player->GetPosition().y < -100.0f){
             m_Player->Teleport(glm::vec3(8.0f,30.0f,8.0f));
         }
-        
-
-        auto [dx,dy] = Input::GetDeltaMousePos();
-        m_Camera->CameraView(dx,dy);
 
         glm::mat4 view = m_Camera->GetViewMartix();
         glm::mat4 projection = m_Camera->GetProjectionMartix();
@@ -137,6 +113,8 @@ namespace Engine{
         Ray = Raycaster::TraverseRay(10, m_Camera->GetPosition(), m_Camera->GetFront(), m_World.get());
         if(Ray.Hit)
             m_Wireframe->DrawBlockBox(Ray.HitPos, glm::vec4(0.0f, 0.0f, 0.0f, 1.0f), view, projection);
+
+        
     }
 
     void GameLayer::OnDetach(){
@@ -166,11 +144,13 @@ namespace Engine{
                     glfwSetInputMode(Application::GetApp().GetWindow().GetWindowHandle(),GLFW_CURSOR,GLFW_CURSOR_NORMAL);
                     Input::Get().SetWindowFocus(false);
                     m_ESC = true;
+                    m_GameState->State = GameState::Paused;
                 }else{
                     glfwSetInputMode(Application::GetApp().GetWindow().GetWindowHandle(),GLFW_CURSOR,GLFW_CURSOR_DISABLED);
                     Input::Get().SetWindowFocus(true);
                     Input::Get().ResetMouseDelta();
                     m_ESC = false;
+                    m_GameState->State = GameState::Playing;
                 }
             }
             if(event.GetKeyCode() == GLFW_KEY_1 && event.GetKeyCode() <= GLFW_KEY_9){
@@ -229,6 +209,7 @@ namespace Engine{
         });
 
         dispatcher.Dispatch<MouseButtonPressedEvent>([this](MouseButtonPressedEvent & event){
+            if(m_GameState->State != GameState::Playing) return false;
             if(event.GetMouseButton() == GLFW_MOUSE_BUTTON_RIGHT){
                 m_MouseRightHold = true;
                 PlaceBlock();

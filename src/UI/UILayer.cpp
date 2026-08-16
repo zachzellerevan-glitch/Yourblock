@@ -92,14 +92,27 @@ namespace Engine{
         m_Height = (float)Application::GetApp().GetWindow().GetHeight();
 
         m_Renderer->BeginFrame(m_Width, m_Height);
-        // 热栏/按钮/文字
-        const float barLen = 6.0f, thick = 2.0f;
-        float cx = m_Width / 2.0f, cy = m_Height / 2.0f;
-        m_Renderer->DrawQuad(cx - barLen, cy - thick/2, barLen*2, thick, glm::vec4(1,1,1,1));
-        m_Renderer->DrawQuad(cx - thick/2, cy - barLen, thick, barLen*2, glm::vec4(1,1,1,1));
-        if(m_HotbarState == true)
-            DrawHotBar();
-        DrawTextF(*m_Renderer, 10, 10, glm::vec4(1,1,1,1), 0.6f, 1.5f, "FPS: %.1f", m_FPS);
+
+        switch(m_GameUIState->State){
+            case GameState::Playing:
+            {
+                const float barLen = 6.0f, thick = 2.0f;
+                float cx = m_Width / 2.0f, cy = m_Height / 2.0f;
+                m_Renderer->DrawQuad(cx - barLen, cy - thick/2, barLen*2, thick, glm::vec4(1,1,1,1));
+                m_Renderer->DrawQuad(cx - thick/2, cy - barLen, thick, barLen*2, glm::vec4(1,1,1,1));
+                if(m_HotbarState) DrawHotBar();
+                DrawTextF(*m_Renderer, 10, 10, glm::vec4(1,1,1,1), 0.6f, 1.5f, "FPS: %.1f", m_FPS);
+            }
+                break;
+            case GameState::Paused:
+                DrawTextF(*m_Renderer, m_Width - 100, 10, glm::vec4(1,1,1,1),0.6f, 1.5f, "Paused");
+                break;
+            case GameState::InMenu:
+                break;
+            default:
+                break;
+        }
+        
         m_Renderer->EndFrame();
     }
 
