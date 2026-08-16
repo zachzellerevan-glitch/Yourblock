@@ -11,10 +11,10 @@ namespace Engine{
             static constexpr float Height = 1.8f;
             static constexpr float EyeHeight = 1.6f;
             static constexpr float HalfWidth = Weight / 2.0f;
-            static constexpr float WalkSpeed = 2.0f;
-            static constexpr float RunSpeed = 4.0f;
+            static constexpr float WalkSpeed = 3.0f;
+            static constexpr float RunSpeed = 6.0f;
             static constexpr float JumpVelocity = 8.0f;
-            static constexpr float Gravity = 18.6f;
+            static constexpr float Gravity = 20.0f;
             static constexpr float MaxFallVelocity = -100.0f;
 
             Player(const glm::vec3 SpawnPos);

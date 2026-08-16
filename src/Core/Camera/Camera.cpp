@@ -4,7 +4,7 @@ namespace Engine{
     Camera::Camera(float Fov,float AspectRatio,float NearPlane,float FarPlane)
             : m_Fov(Fov),m_AspectRatio(AspectRatio),m_NearPlane(NearPlane),m_FarPlane(FarPlane),
             m_Position(0.0f,0.0f,0.0f),m_Yaw(-90.0f),m_Pitch(0.0f){
-        m_ProjectionMartix = glm::perspective(glm::radians(m_Fov),m_AspectRatio,m_NearPlane,m_FarPlane);
+        UpdateProjection();
         UpdateView();
     }
 
@@ -19,7 +19,11 @@ namespace Engine{
 
         m_ViewMartix = glm::lookAt(m_Position,m_Position + m_Front,m_Up); //Position,look at point,up
     }
-
+    
+    void Camera::UpdateProjection(){
+        m_ProjectionMartix = glm::perspective(glm::radians(m_Fov), m_AspectRatio, m_NearPlane, m_FarPlane);
+    }
+    
     void Camera::SetPosition(const glm::vec3 &position){
         m_Position = position;
         UpdateView();
@@ -33,7 +37,7 @@ namespace Engine{
 
     void Camera::SetAspectRatio(float AspectRatio){
         m_AspectRatio = AspectRatio;
-        m_ProjectionMartix = glm::perspective(glm::radians(m_Fov),m_AspectRatio,m_NearPlane,m_FarPlane);
+        UpdateProjection();
     }
 
     void Camera::EnableFly(bool flag){

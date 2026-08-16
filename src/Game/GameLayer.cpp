@@ -75,6 +75,9 @@ namespace Engine{
         if(glm::length(moveDir) > 0.0f) moveDir = glm::normalize(moveDir);
         bool jump = Input::IsKeyPressed(GLFW_KEY_SPACE);
         m_Player->Update(dt, moveDir, jump, sprint, *m_World);
+        m_TargetPov = sprint ? 100.0f : 90.0f;
+        float cur = m_Camera->GetPov();
+        m_Camera->SetPov(cur + (m_TargetPov - cur) * std::min(1.0f, 10.0f * dt));
         m_Camera->SetPosition(m_Player->GetEyePosition());
 
         if(Input::IsKeyPressed(GLFW_KEY_V)){

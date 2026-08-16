@@ -47,7 +47,7 @@ namespace Engine{
             unsigned int m_VAO,m_VBO,m_EBO;
             bool m_ESC = false;
             bool m_Enable = true;
-
+            float m_TargetPov = 90.0f;
             HotbarState m_Hotbar ={
                 { BlockType::STONE, BlockType::DIRT, BlockType::GRASS, BlockType::SAND,
                 BlockType::STONE, BlockType::DIRT, BlockType::GRASS, BlockType::SAND, BlockType::STONE },

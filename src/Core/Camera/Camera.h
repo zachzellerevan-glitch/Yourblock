@@ -28,11 +28,14 @@ namespace Engine{
             inline glm::vec3 GetPosition() const {return m_Position;}
             inline glm::vec3 GetFront() const {return m_Front;}
             inline glm::vec3 GetRight() const {return m_Right;}
+            inline float GetPov() const {return m_Fov;}
             void CameraMove(MoveDirection movement,float dt);
             void CameraView(float xoffset,float yoffset);
-
+            void SetPov(float pov){m_Fov = pov; UpdateProjection();}
+            
         private:
             void UpdateView();
+            void UpdateProjection();
             float m_Yaw,m_Pitch;
             float m_Fov,m_AspectRatio,m_NearPlane,m_FarPlane;
             float m_CameraSpeed = 5.0f,m_Sensitive = 0.2f;
