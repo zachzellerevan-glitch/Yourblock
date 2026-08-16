@@ -2,11 +2,54 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <cstddef>
 #include "Render/UIIconAtlas.h"
+#include "Render/GlyphAtlas.h"
+#include <cmath>
+#include <cstdio>
+#include <cstdarg>
 
 namespace Engine{
+    void DrawText(Renderer2D & r, const char* text, float x, float y,
+              const glm::vec4 & color, float scale, float lineHeightScale = 1.4f){
+        auto & atlas = GlyphAtlas::Get();
+        const float baked = atlas.GetPixelSize();
+        const float lineH = baked * scale * lineHeightScale;   // 行高也随 scale
+
+        float cx = x;
+        float baseline = y + baked * scale;                    // 基线随 scale
+        const char* p = text;
+
+        while(*p){
+            unsigned int cp = DecodeUTF8(p);
+            if(cp == '\n'){ baseline += lineH; cx = x; continue; }
+
+            const Glyph & g = atlas.GetGlyph(cp);
+            if(g.Size.x <= 0.0f && g.Size.y <= 0.0f){ cx += g.Advance * scale; continue; }
+
+            // ★ 三处全乘 scale:尺寸、bearing、advance
+            float w = g.Size.x * scale;
+            float h = g.Size.y * scale;
+            float qx = std::floor(cx + g.Bearing.x * scale + 0.5f);
+            float qy = std::floor(baseline - g.Bearing.y * scale + 0.5f);
+            r.DrawQuad(qx, qy, w, h, color,
+                    glm::vec2(g.UV.x, g.UV.y), glm::vec2(g.UV.z, g.UV.w),
+                    atlas.GetTextureID());
+            cx += g.Advance * scale;
+        }
+    }
+
+    void DrawTextF(Renderer2D & r, float x, float y, const glm::vec4 & color,
+               float scale, float lightHeightScale, const char* fmt, ...){
+        char buf[256];
+        va_list args;
+        va_start(args, fmt);
+        vsnprintf(buf, sizeof(buf), fmt, args);   // 格式化进缓冲,超长自动截断(安全)
+        va_end(args);
+        DrawText(r, buf, x, y, color, scale, lightHeightScale);
+    }
     void UILayer::OnAttach(){
         m_Renderer = std::make_unique<Renderer2D>();
         UIIconAtlas::Get().Build();
+        GlyphAtlas::Get().Build("assets/Font/Font.ttf", 48);
     }
 
     void UILayer::OnDetach(){
@@ -43,6 +86,8 @@ namespace Engine{
     }
 
     void UILayer::OnUpdate(float dt){
+        if(dt > 0.0001f)
+            m_FPS = m_FPS * 0.9f + (1.0f / dt) * 0.1f;
         m_Width = (float)Application::GetApp().GetWindow().GetWidth();
         m_Height = (float)Application::GetApp().GetWindow().GetHeight();
 
@@ -54,7 +99,7 @@ namespace Engine{
         m_Renderer->DrawQuad(cx - thick/2, cy - barLen, thick, barLen*2, glm::vec4(1,1,1,1));
         if(m_HotbarState == true)
             DrawHotBar();
-        
+        DrawTextF(*m_Renderer, 10, 10, glm::vec4(1,1,1,1), 0.6f, 1.5f, "FPS: %.1f", m_FPS);
         m_Renderer->EndFrame();
     }
 

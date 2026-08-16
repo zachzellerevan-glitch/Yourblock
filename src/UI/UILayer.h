@@ -26,6 +26,7 @@ namespace Engine{
             bool m_HotbarState = true;
             float m_Width;
             float m_Height;
+            float m_FPS = 0.0f;
             const HotbarState* m_Hotbar;
     };
 }

@@ -4,6 +4,14 @@ project(YourBlock VERSION 0.1.0 LANGUAGES CXX C)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)        # 静态链接,可执行文件自包含
+set(FT_DISABLE_ZLIB ON CACHE BOOL "" FORCE)
+set(FT_DISABLE_BZIP2 ON CACHE BOOL "" FORCE)
+set(FT_DISABLE_PNG ON CACHE BOOL "" FORCE)
+set(FT_DISABLE_HARFBUZZ ON CACHE BOOL "" FORCE)
+set(FT_DISABLE_BROTLI ON CACHE BOOL "" FORCE)
+add_subdirectory(libs/freetype)
+
 add_subdirectory(libs/glfw)
 add_subdirectory(libs/glm)
 
@@ -33,7 +41,7 @@ file(GLOB_RECURSE SOURCES "src/*.cpp")
 add_executable(YourBlock ${SOURCES})
 # 将 assets 文件夹复制到可执行文件所在的构建目录
 file(COPY assets/ DESTINATION ${CMAKE_BINARY_DIR}/assets)
-
+target_link_libraries(YourBlock PRIVATE freetype)
 
 find_package(OpenGL REQUIRED)
 target_include_directories(YourBlock PRIVATE src/)
