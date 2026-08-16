@@ -1,11 +1,12 @@
 #include "UILayer.h"
 #include <glm/gtc/matrix_transform.hpp>
 #include <cstddef>
-
+#include "Render/UIIconAtlas.h"
 
 namespace Engine{
     void UILayer::OnAttach(){
         m_Renderer = std::make_unique<Renderer2D>();
+        UIIconAtlas::Get().Build();
     }
 
     void UILayer::OnDetach(){
@@ -33,8 +34,11 @@ namespace Engine{
             m_Renderer->DrawQuad(sx, sy, slot, slot,           // L2 格子底色
                                 glm::vec4(0.1f, 0.1f, 0.1f, 0.7f));
 
-            // L4 图标 —— 先用纯色占位,以后换贴图(见第 3 步)
-            m_Renderer->DrawQuad(sx+8, sy+8, slot-16, slot-16, glm::vec4(1,0,0,1));
+            // L4 图标 —— 先用纯色占位,以后换贴图
+            const glm::vec4 uv = UIIconAtlas::Get().GetUV(m_Hotbar->Slots[i]);
+            m_Renderer->DrawQuad(sx+8, sy+8, slot-16, slot-16, glm::vec4(1.0f),
+                                glm::vec2(uv.x, uv.y), glm::vec2(uv.z, uv.w),
+                                UIIconAtlas::Get().GetTextureID());
         }
     }
 

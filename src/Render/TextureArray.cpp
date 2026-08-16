@@ -16,7 +16,7 @@ namespace Engine{
         }
 
         m_LayerCount = static_cast<int>(TexFiles.size());
-
+        m_CpuLayers.resize(m_LayerCount);
         //Get and check size
         int width,height,channels;
         stbi_uc * firstTex = stbi_load(TexFiles[0].c_str(),&width,&height,&channels,4);
@@ -42,6 +42,7 @@ namespace Engine{
                 continue;
             }
             glTexSubImage3D(GL_TEXTURE_2D_ARRAY,0,0,0,i,m_TileSize,m_TileSize,1,GL_RGBA,GL_UNSIGNED_BYTE,Textures);
+            m_CpuLayers[i].assign(Textures, Textures + m_TileSize * m_TileSize * 4);
             stbi_image_free(Textures);
 
             //Set TextureName per Layer
